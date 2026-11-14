@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { CampoNumero } from "@/componentes/campo-numero";
 import { CalculadoraClinica } from "@/dominio/calculadora-clinica";
+import { aNumero, formatear } from "@/dominio/numeros";
 import { colores } from "@/tema/colores";
 
 // Los tres cálculos de CU01.
@@ -46,21 +47,6 @@ const CALCULOS: { tipo: TipoCalculo; nombre: string; campos: [Campo, Campo] }[] 
     ],
   },
 ];
-
-// Convierte el texto de un campo en número. Acepta coma o punto decimal.
-// Devuelve NaN (no es un número) si el campo está vacío o no es válido.
-function aNumero(texto: string): number {
-  if (texto.trim() === "") {
-    return NaN;
-  }
-  return Number(texto.replace(",", "."));
-}
-
-// Escribe un número con dos decimales como máximo y coma decimal.
-function formatear(numero: number): string {
-  const redondeado = Math.round(numero * 100) / 100;
-  return String(redondeado).replace(".", ",");
-}
 
 export default function Calculadora() {
   const [calculo, setCalculo] = useState<TipoCalculo>("dosis");
@@ -143,6 +129,7 @@ export default function Calculadora() {
     <ScrollView
       style={styles.pantalla}
       contentContainerStyle={styles.contenedor}
+      contentInsetAdjustmentBehavior="automatic"
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
     >
