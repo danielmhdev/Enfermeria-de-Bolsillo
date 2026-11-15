@@ -84,7 +84,7 @@ export default function Calculadora() {
       return;
     }
 
-    // CalculadoraClinica lanza un error si un dato no es válido (R02F
+    // CalculadoraClinica lanza un error si un dato no es válido.
     try {
       if (calculo === "dosis") {
         const mg = CalculadoraClinica.dosisPorPeso(a, b);

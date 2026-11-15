@@ -35,13 +35,7 @@ export class RangoDosis {
     };
   }
 
-  // Indica si una dosis en mg está dentro del rango de referencia (R03F02T01).
-  estaEnRango(dosisMg: number, pesoKg: number | null): boolean {
-    const limites = this.limitesMg(pesoKg);
-    return dosisMg >= limites.min && dosisMg <= limites.max;
-  }
-
-  // Indica si una dosis en mg supera el máximo de referencia. Es lo que activa el aviso:
+  // Indica si una dosis en mg supera el máximo de referencia (R03F02T01). Es lo que activa el aviso:
   // una dosis por debajo del mínimo no avisa.
   superaMaximo(dosisMg: number, pesoKg: number | null): boolean {
     return dosisMg > this.limitesMg(pesoKg).max;

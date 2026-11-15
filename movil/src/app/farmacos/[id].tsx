@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import Stack from "expo-router/stack";
@@ -22,13 +22,12 @@ export default function DetalleFarmaco() {
   // El id llega en la ruta: /farmacos/3 da id = "3".
   const { id } = useLocalSearchParams<{ id: string }>();
   const db = useSQLiteContext();
-  const repositorio = useMemo(() => new FarmacoRepositorio(db), [db]);
 
   const [farmaco, setFarmaco] = useState<Farmaco | null>(null);
 
   useEffect(() => {
-    repositorio.porId(Number(id)).then(setFarmaco);
-  }, [repositorio, id]);
+    new FarmacoRepositorio(db).porId(Number(id)).then(setFarmaco);
+  }, [db, id]);
 
   // Mientras se lee de la base de datos no hay nada que pintar.
   if (farmaco === null) {

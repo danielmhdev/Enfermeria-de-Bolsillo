@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, TextInput } from "react-native";
 import { Link } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
@@ -9,16 +9,14 @@ import { colores } from "@/tema/colores";
 export default function Farmacos() {
   // La base de datos que abrió SQLiteProvider en _layout.tsx.
   const db = useSQLiteContext();
-  // El repositorio se crea una sola vez, no en cada pintado de la pantalla.
-  const repositorio = useMemo(() => new FarmacoRepositorio(db), [db]);
 
   const [texto, setTexto] = useState("");
   const [resultados, setResultados] = useState<Farmaco[]>([]);
 
   // Cada vez que cambia el texto se vuelve a buscar (resultados mientras se escribe).
   useEffect(() => {
-    repositorio.buscar(texto).then(setResultados);
-  }, [repositorio, texto]);
+    new FarmacoRepositorio(db).buscar(texto).then(setResultados);
+  }, [db, texto]);
 
   return (
     <FlatList
