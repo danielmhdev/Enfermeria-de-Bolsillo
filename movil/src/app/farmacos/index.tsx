@@ -6,7 +6,7 @@ import { FarmacoRepositorio } from "@/datos/farmaco-repositorio";
 import { Farmaco } from "@/dominio/farmaco";
 import { colores } from "@/tema/colores";
 
-export default function Farmacos() {
+export default function PantallaFarmacos() {
   // La base de datos que abrió SQLiteProvider en _layout.tsx.
   const db = useSQLiteContext();
 

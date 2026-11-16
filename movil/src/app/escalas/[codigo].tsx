@@ -7,7 +7,7 @@ import { EscalaRepositorio } from "@/datos/escala-repositorio";
 import { Escala, type Opcion, type Respuestas } from "@/dominio/escala";
 import { colores } from "@/tema/colores";
 
-export default function FormularioEscala() {
+export default function PantallaEscala() {
   // El código llega en la ruta: /escalas/news2 da codigo = "news2".
   const { codigo } = useLocalSearchParams<{ codigo: string }>();
   const db = useSQLiteContext();

@@ -18,7 +18,7 @@ function textoDosis(rango: RangoDosis): string {
   return `${formatear(rango.dosisMin)}-${formatear(rango.dosisMax)} ${unidad}`;
 }
 
-export default function DetalleFarmaco() {
+export default function PantallaFarmaco() {
   // El id llega en la ruta: /farmacos/3 da id = "3".
   const { id } = useLocalSearchParams<{ id: string }>();
   const db = useSQLiteContext();

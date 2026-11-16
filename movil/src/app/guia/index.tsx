@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export default function guia() {
+export default function PantallaGuia() {
   return (
     <View style={styles.contenedor}>
       <Text>Guía</Text>

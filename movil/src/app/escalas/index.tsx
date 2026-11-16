@@ -6,7 +6,7 @@ import { EscalaRepositorio } from "@/datos/escala-repositorio";
 import { Escala } from "@/dominio/escala";
 import { colores } from "@/tema/colores";
 
-export default function Escalas() {
+export default function PantallaEscalas() {
   const db = useSQLiteContext();
 
   const [escalas, setEscalas] = useState<Escala[]>([]);
