@@ -1,5 +1,9 @@
-import { Link, type Href } from "expo-router";
+import { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Link, type Href } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
+import { AvisoLegal } from "@/componentes/aviso-legal";
+import { AjusteRepositorio } from "@/datos/ajuste-repositorio";
 import { colores } from "@/tema/colores";
 
 // Secciones de la app. Cada una lleva a su pantalla.
@@ -11,8 +15,34 @@ const SECCIONES: { ruta: Href; nombre: string; detalle: string }[] = [
   { ruta: "/tareas", nombre: "Tareas", detalle: "Tareas del turno y alertas" },
 ];
 
-// Menú de inicio: el logo, el título y un botón grande por cada sección.
+// Pantalla de inicio. La primera vez muestra el aviso legal; después, el menú
+// con el logo, el título y un botón grande por cada sección.
 export default function PantallaInicio() {
+  const db = useSQLiteContext();
+
+  // null mientras se consulta la base de datos.
+  const [aceptado, setAceptado] = useState<boolean | null>(null);
+
+  // Al abrir la app se mira si el aviso legal ya está aceptado.
+  useEffect(() => {
+    new AjusteRepositorio(db)
+      .leer("aviso_aceptado_en")
+      .then((valor) => setAceptado(valor !== null));
+  }, [db]);
+
+  // Guarda la fecha de la aceptación y da paso al menú (R11F03T01).
+  async function aceptar() {
+    await new AjusteRepositorio(db).guardar("aviso_aceptado_en", new Date().toISOString());
+    setAceptado(true);
+  }
+
+  if (aceptado === null) {
+    return null;
+  }
+  if (!aceptado) {
+    return <AvisoLegal alAceptar={aceptar} />;
+  }
+
   return (
     <ScrollView
       style={styles.pantalla}
