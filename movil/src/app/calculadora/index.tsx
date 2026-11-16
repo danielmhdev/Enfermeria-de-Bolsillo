@@ -48,7 +48,7 @@ const CALCULOS: { tipo: TipoCalculo; nombre: string; campos: [Campo, Campo] }[] 
   },
 ];
 
-export default function Calculadora() {
+export default function PantallaCalculadora() {
   const [calculo, setCalculo] = useState<TipoCalculo>("dosis");
   const [valor1, setValor1] = useState("");
   const [valor2, setValor2] = useState("");
