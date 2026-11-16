@@ -41,11 +41,19 @@ export class TareaRepositorio {
   }
 
   // Guarda una tarea nueva. validarTexto lanza un error si el texto no vale.
-  async crear(texto: string, prioridad: Prioridad): Promise<void> {
+  // horaAlerta y notificacionId son null si la tarea no lleva alerta.
+  async crear(
+    texto: string,
+    prioridad: Prioridad,
+    horaAlerta: Date | null,
+    notificacionId: string | null
+  ): Promise<void> {
     await this.db.runAsync(
-      "INSERT INTO tarea (texto, prioridad, creada_en) VALUES (?, ?, ?)",
+      "INSERT INTO tarea (texto, prioridad, hora_alerta, notificacion_id, creada_en) VALUES (?, ?, ?, ?, ?)",
       validarTexto(texto),
       prioridad,
+      horaAlerta === null ? null : horaAlerta.toISOString(),
+      notificacionId,
       new Date().toISOString()
     );
   }
@@ -66,16 +74,19 @@ export class TareaRepositorio {
 
   // Borra las tareas si la más antigua tiene 12 horas o más (R06F03T02).
   // Las fechas se guardan como texto ISO, así que MIN devuelve la más antigua.
-  async borrarSiCaducadas(): Promise<void> {
+  // Devuelve true si ha borrado, para cancelar también las alertas.
+  async borrarSiCaducadas(): Promise<boolean> {
     const fila = await this.db.getFirstAsync<{ primera: string | null }>(
       "SELECT MIN(creada_en) AS primera FROM tarea"
     );
     // Si no hay tareas, MIN devuelve null y no hay nada que borrar.
     if (fila === null || fila.primera === null) {
-      return;
+      return false;
     }
     if (turnoCaducado(new Date(fila.primera), new Date())) {
       await this.borrarTodas();
+      return true;
     }
+    return false;
   }
 }
