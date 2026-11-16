@@ -1,0 +1,16 @@
+# PostgreSQL para desarrollo. Arrancar: docker compose up -d. Parar: docker compose down.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: enfermeria
+      POSTGRES_PASSWORD: enfermeria
+      POSTGRES_DB: enfermeria
+    ports:
+      # El 5433 del Mac lleva al 5432 del contenedor (el 5432 del Mac suele estar ocupado).
+      - "5433:5432"
+    volumes:
+      - datos:/var/lib/postgresql/data
+
+volumes:
+  datos:
