@@ -1,0 +1,17 @@
+<svg viewBox="0 0 1200 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title description">
+  <title id="title">Enfermería de Bolsillo — azul y menta</title>
+  <desc id="description">Un bolsillo abstracto azul contiene una cruz sanitaria de color menta.</desc>
+  <path
+    d="M106 116V306C106 385.5 170.5 450 250 450H282C361.5 450 426 385.5 426 306V116"
+    fill="none"
+    stroke="#34627A"
+    stroke-width="46"
+    stroke-linecap="square"
+  />
+  <rect x="243" y="52" width="46" height="224" fill="#9CCFC3" />
+  <rect x="190" y="112" width="152" height="46" fill="#9CCFC3" />
+  <g fill="#34627A" font-family="Arial, Helvetica, sans-serif">
+    <text x="518" y="253" font-size="91" font-weight="700" letter-spacing="-5">enfermería</text>
+    <text x="518" y="354" font-size="91" font-weight="400" letter-spacing="-5">de bolsillo</text>
+  </g>
+</svg>

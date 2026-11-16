@@ -16,7 +16,7 @@ const SECCIONES: { ruta: Href; nombre: string; detalle: string }[] = [
 ];
 
 // Pantalla de inicio. La primera vez muestra el aviso legal; después, el menú
-// con el logo, el título y un botón grande por cada sección.
+// con el logo y un botón grande por cada sección.
 export default function PantallaInicio() {
   const db = useSQLiteContext();
 
@@ -50,12 +50,13 @@ export default function PantallaInicio() {
       contentInsetAdjustmentBehavior="automatic"
     >
       <View style={styles.cabecera}>
+        {/* El logo ya incluye el nombre de la app. */}
         <Image
           style={styles.logo}
           source={require("@/assets/images/logo.png")}
-          accessibilityLabel="Logo de Enfermería de Bolsillo"
+          resizeMode="contain"
+          accessibilityLabel="Enfermería de Bolsillo"
         />
-        <Text style={styles.titulo}>Enfermería de Bolsillo</Text>
       </View>
 
       {SECCIONES.map((seccion) => (
@@ -73,9 +74,9 @@ export default function PantallaInicio() {
 const styles = StyleSheet.create({
   pantalla: { flex: 1, backgroundColor: colores.fondo },
   contenedor: { padding: 16, gap: 12 },
-  cabecera: { alignItems: "center", gap: 12, marginVertical: 16 },
-  logo: { width: 96, height: 96 },
-  titulo: { color: colores.texto, fontSize: 26, fontWeight: "700" },
+  cabecera: { alignItems: "center", marginVertical: 16 },
+  // Misma proporción que la imagen (892 x 461).
+  logo: { width: "80%", height: undefined, aspectRatio: 892 / 461 },
   tarjeta: {
     minHeight: 72,
     justifyContent: "center",

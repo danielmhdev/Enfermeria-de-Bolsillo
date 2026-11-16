@@ -4,12 +4,12 @@ export const colores = {
   // Fondos
   fondo: "#F6F8FB", // fondo de las pantallas
   superficie: "#FFFFFF", // tarjetas y campos
-  primario: "#BFDDF5", // botones principales (azul pastel)
+  primario: "#9CCFC3", // botones principales (menta del logo)
 
   // Textos
   texto: "#1B2A3A", // texto principal, también sobre "primario"
   textoSecundario: "#4A5A6A", // etiquetas y ayudas
-  acento: "#1F5F99", // enlaces y elemento seleccionado
+  acento: "#34627A", // enlaces y elemento seleccionado (azul del logo)
 
   // Bordes de campos y tarjetas
   borde: "#7C8A99",
