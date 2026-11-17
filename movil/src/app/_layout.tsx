@@ -26,6 +26,7 @@ export default function Navegacion() {
         <Stack.Screen name="escalas/index" options={{ title: "Escalas" }} />
         <Stack.Screen name="escalas/[codigo]" options={{ title: "" }} />
         <Stack.Screen name="guia/index" options={{ title: "Guía de curas" }} />
+        <Stack.Screen name="guia/[codigo]" options={{ title: "" }} />
         <Stack.Screen name="tareas/index" options={{ title: "Tareas" }} />
       </Stack>
     </SQLiteProvider>
