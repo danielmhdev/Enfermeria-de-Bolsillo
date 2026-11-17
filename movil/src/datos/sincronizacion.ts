@@ -1,6 +1,7 @@
 import { type SQLiteDatabase } from "expo-sqlite";
 import { AjusteRepositorio } from "./ajuste-repositorio";
-import { ContenidoRepositorio, type Contenido } from "./contenido-repositorio";
+import { ContenidoRepositorio } from "./contenido-repositorio";
+import { EsquemaRespuestaContenido } from "./esquemas";
 
 const URL_API = process.env.EXPO_PUBLIC_API_URL;
 
@@ -43,12 +44,14 @@ export async function sincronizar(db: SQLiteDatabase): Promise<boolean> {
   if (!(await hayContenidoNuevo(db))) {
     return false;
   }
-  const contenido = await pedir<Contenido & { version: number }>("/sync/contenido");
-  if (contenido === null || typeof contenido.version !== "number") {
+  const datos = await pedir<unknown>("/sync/contenido");
+  // Si no es válido, no se toca nada y se queda el contenido que había.
+  const resultado = EsquemaRespuestaContenido.safeParse(datos);
+  if (!resultado.success) {
     return false;
   }
   try {
-    await new ContenidoRepositorio(db).reemplazar(contenido, contenido.version);
+    await new ContenidoRepositorio(db).reemplazar(resultado.data, resultado.data.version);
     return true;
   } catch {
     return false;

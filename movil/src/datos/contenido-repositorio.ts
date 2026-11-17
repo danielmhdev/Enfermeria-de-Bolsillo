@@ -1,30 +1,7 @@
 import { type SQLiteDatabase } from "expo-sqlite";
 import { normalizar } from "@/dominio/texto";
 import { AjusteRepositorio } from "./ajuste-repositorio";
-
-// Misma forma que los JSON de contenido y que /sync/contenido.
-type RangoJson = {
-  via: string;
-  indicacion: string;
-  tipo: string;
-  dosisMin: number;
-  dosisMax: number;
-  intervaloH: number | null;
-  maxDiario: number | null;
-  pesoMinKg: number | null;
-  pesoMaxKg: number | null;
-  nota: string | null;
-  fuente: string;
-  fuenteUrl: string;
-};
-
-export type FarmacoJson = { nombre: string; rangos: RangoJson[] };
-
-export type EscalaJson = { codigo: string; nombre: string; definicion: object };
-
-type GuiaJson = { codigo: string; nombre: string; arbol: object };
-
-export type Contenido = { farmacos: FarmacoJson[]; escalas: EscalaJson[]; guias: GuiaJson[] };
+import { type Contenido } from "./esquemas";
 
 export class ContenidoRepositorio {
   private readonly db: SQLiteDatabase;
