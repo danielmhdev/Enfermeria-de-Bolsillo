@@ -9,8 +9,10 @@ import { crearTablas } from "./esquema.js";
 const app = express();
 const repositorio = new ContenidoRepositorio();
 
-// Delante hay un proxy de Render: la IP real del móvil llega en X-Forwarded-For.
-app.set("trust proxy", 1);
+// La IP real del móvil llega en X-Forwarded-For. Delante hay tres saltos:
+// Cloudflare y dos proxies internos de Render.
+// Comprobado el 17/11/2026 con una ruta temporal que devolvía la IP.
+app.set("trust proxy", 3);
 
 // Cabeceras de seguridad (R11F01T01). También quita x-powered-by.
 app.use(helmet());
@@ -24,12 +26,6 @@ const limitador = rateLimit({
   legacyHeaders: false,
 });
 app.use("/api/v1/sync", limitador);
-
-// TEMPORAL: para comprobar trust proxy en Render. Se quita en el siguiente commit.
-app.get("/api/v1/ip", (peticion, respuesta) => {
-  respuesta.json({ ip: peticion.ip, cadena: peticion.headers["x-forwarded-for"] });
-});
-
 // Render pone su puerto en PORT.
 const PUERTO = Number(process.env.PORT ?? 3000);
 
