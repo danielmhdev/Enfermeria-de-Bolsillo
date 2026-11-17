@@ -33,7 +33,9 @@ export async function versionDelServidor(): Promise<number | null> {
 export async function hayContenidoNuevo(db: SQLiteDatabase): Promise<boolean> {
   const local = Number((await new AjusteRepositorio(db).leer("version_contenido")) ?? 0);
   const servidor = await versionDelServidor();
-  return servidor !== null && servidor > local;
+  // El servidor manda: si su versión es distinta, se descarga.
+  // 0 es que todavía no hay nada publicado.
+  return servidor !== null && servidor > 0 && servidor !== local;
 }
 
 // R07F02T01. Devuelve true si ha actualizado.
