@@ -1,7 +1,7 @@
 import { db } from "./base-datos.js";
 
-// Tablas del servidor (R08F01T01). Las cuatro de contenido son las mismas
-// que en la app; solo cambian los tipos. version solo existe aquí.
+// Tablas del servidor (R08F01T01). Las de contenido son las de la app;
+// version solo existe aquí.
 const ESQUEMA = `
 CREATE TABLE IF NOT EXISTS farmaco (
   id INTEGER PRIMARY KEY,

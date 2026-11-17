@@ -1,4 +1,5 @@
-# PostgreSQL para desarrollo. Arrancar: docker compose up -d. Parar: docker compose down.
+# API y PostgreSQL (R08F03T01).
+# Arrancar: docker compose up -d --build. Parar: docker compose down.
 services:
   db:
     image: postgres:17
@@ -7,10 +8,25 @@ services:
       POSTGRES_PASSWORD: enfermeria
       POSTGRES_DB: enfermeria
     ports:
-      # El 5433 del Mac lleva al 5432 del contenedor (el 5432 del Mac suele estar ocupado).
-      - "5433:5432"
+      # Solo para este equipo. El 5432 del Mac ya está ocupado.
+      - "127.0.0.1:5433:5432"
     volumes:
       - datos:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U enfermeria"]
+      interval: 2s
+      retries: 15
+
+  api:
+    build: .
+    environment:
+      # Dentro de Docker la base de datos se llama db, como el servicio.
+      DATABASE_URL: postgres://enfermeria:enfermeria@db:5432/enfermeria
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   datos:
