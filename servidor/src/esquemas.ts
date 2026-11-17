@@ -69,20 +69,40 @@ export const EsquemaEscala = z.object({
 export const EsquemaGuia = z.object({
   codigo: texto,
   nombre: texto,
-  arbol: z.object({
-    inicio: texto,
-    nodos: z
-      .array(
-        z.object({
-          id: texto,
-          tipo: z.enum(["pregunta", "recomendacion"]),
-          texto: texto,
-          fuente: z.string().nullable(),
-          respuestas: z.array(z.object({ texto: texto, siguiente: texto })),
-        })
-      )
-      .min(1),
-  }),
+  arbol: z
+    .object({
+      inicio: texto,
+      nodos: z
+        .array(
+          z.object({
+            id: texto,
+            tipo: z.enum(["pregunta", "recomendacion"]),
+            texto: texto,
+            fuente: z.string().nullable(),
+            respuestas: z.array(z.object({ texto: texto, siguiente: texto })),
+          })
+        )
+        .min(1),
+    })
+    // El inicio y cada respuesta llevan a un nodo que existe.
+    .refine(
+      (arbol) => {
+        const ids = arbol.nodos.map((nodo) => nodo.id);
+        return (
+          ids.includes(arbol.inicio) &&
+          arbol.nodos.every((nodo) => nodo.respuestas.every((r) => ids.includes(r.siguiente)))
+        );
+      },
+      { message: "El árbol enlaza con un nodo que no existe" }
+    )
+    // Las preguntas tienen respuestas y las recomendaciones no.
+    .refine(
+      (arbol) =>
+        arbol.nodos.every((nodo) =>
+          nodo.tipo === "pregunta" ? nodo.respuestas.length > 0 : nodo.respuestas.length === 0
+        ),
+      { message: "Una pregunta sin respuestas o una recomendación con respuestas" }
+    ),
 });
 
 export const EsquemaContenido = z.object({

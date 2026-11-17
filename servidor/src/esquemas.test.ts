@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { test } from "node:test";
-import { EsquemaFarmaco } from "./esquemas.js";
+import { EsquemaFarmaco, EsquemaGuia } from "./esquemas.js";
 
 const rangoValido = {
   via: "IV",
@@ -37,5 +37,26 @@ test("una vía que no existe se rechaza", () => {
 test("dosisMin mayor que dosisMax se rechaza", () => {
   const rango = { ...rangoValido, dosisMin: 2000 };
   const resultado = EsquemaFarmaco.safeParse({ nombre: "Prueba", rangos: [rango] });
+  assert.equal(resultado.success, false);
+});
+
+// Textos de relleno: no es contenido clínico.
+test("una guía con una respuesta que lleva a un nodo que no existe se rechaza", () => {
+  const resultado = EsquemaGuia.safeParse({
+    codigo: "prueba",
+    nombre: "Guía de prueba",
+    arbol: {
+      inicio: "p1",
+      nodos: [
+        {
+          id: "p1",
+          tipo: "pregunta",
+          texto: "¿Pregunta 1?",
+          fuente: null,
+          respuestas: [{ texto: "Sí", siguiente: "p9" }],
+        },
+      ],
+    },
+  });
   assert.equal(resultado.success, false);
 });
