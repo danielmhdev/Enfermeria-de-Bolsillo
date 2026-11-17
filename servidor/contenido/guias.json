@@ -1,1 +1,103 @@
-[]
+[
+  {
+    "codigo": "upp-cura-local",
+    "nombre": "Cura local de úlceras por presión",
+    "arbol": {
+      "inicio": "p1",
+      "nodos": [
+        {
+          "id": "p1",
+          "tipo": "pregunta",
+          "texto": "¿La piel está íntegra, con un enrojecimiento que no blanquea al presionarlo?",
+          "fuente": "Guía práctica de úlceras por presión (n.º 1). Servicio Gallego de Salud, 2017, pp. 26-27. CC BY-SA 4.0.",
+          "respuestas": [
+            { "texto": "Sí", "siguiente": "r1" },
+            { "texto": "No, hay herida abierta, ampolla o escara", "siguiente": "p2" }
+          ]
+        },
+        {
+          "id": "p2",
+          "tipo": "pregunta",
+          "texto": "¿Hay tejido necrótico (negro o marrón, adherido) o esfacelos (amarillos o blancos, de aspecto fibroso) en el lecho?",
+          "fuente": "Guía práctica de úlceras por presión (n.º 1). Servicio Gallego de Salud, 2017, p. 40. CC BY-SA 4.0.",
+          "respuestas": [
+            { "texto": "Sí", "siguiente": "p3" },
+            { "texto": "No", "siguiente": "p4" }
+          ]
+        },
+        {
+          "id": "p3",
+          "tipo": "pregunta",
+          "texto": "¿Es una escara en el talón seca, adherida e intacta, sin eritema, bordes edematosos ni fluctuación?",
+          "fuente": "Guía práctica de úlceras por presión (n.º 1). Servicio Gallego de Salud, 2017, p. 47. CC BY-SA 4.0.",
+          "respuestas": [
+            { "texto": "Sí, es una escara estable en el talón", "siguiente": "r2" },
+            { "texto": "No", "siguiente": "r3" }
+          ]
+        },
+        {
+          "id": "p4",
+          "tipo": "pregunta",
+          "texto": "¿Hay signos de infección local? Sin signos de cicatrización en dos semanas, granulación friable, mal olor, más exudado o exudado sanguinolento o purulento, o más tejido necrótico.",
+          "fuente": "Guía práctica de úlceras por presión (n.º 1). Servicio Gallego de Salud, 2017, p. 51. CC BY-SA 4.0.",
+          "respuestas": [
+            { "texto": "Sí", "siguiente": "r4" },
+            { "texto": "No", "siguiente": "p5" }
+          ]
+        },
+        {
+          "id": "p5",
+          "tipo": "pregunta",
+          "texto": "¿Cuánto exudado tiene la úlcera?",
+          "fuente": "Guía práctica de úlceras por presión (n.º 1). Servicio Gallego de Salud, 2017, p. 53. CC BY-SA 4.0.",
+          "respuestas": [
+            { "texto": "Moderado o abundante", "siguiente": "r5" },
+            { "texto": "Escaso o nulo", "siguiente": "r6" }
+          ]
+        },
+        {
+          "id": "r1",
+          "tipo": "recomendacion",
+          "texto": "Úlcera por presión de categoría I.\n\nElimina o alivia la presión: no apoyes a la persona sobre la lesión. Si está en el talón, déjalo sin apoyo, sobre una almohada o un dispositivo, evitando el pie caído.\n\nAplica todas las medidas de prevención y vigila la zona: una categoría I puede progresar a categoría II o superior.",
+          "fuente": "Guía práctica de úlceras por presión (n.º 1). Servicio Gallego de Salud, 2017, pp. 27 y 41-42. CC BY-SA 4.0.",
+          "respuestas": []
+        },
+        {
+          "id": "r2",
+          "tipo": "recomendacion",
+          "texto": "No desbrides una escara estable en el talón: protege el hueso como una cubierta natural.\n\nRevísala a diario. Si aparecen bordes edematosos, fluctuación o signos de infección, habrá que desbridarla.\n\nEleva el talón con un dispositivo que evite el contacto con la cama y el pie equino; mejor un dispositivo específico que una almohada.",
+          "fuente": "Guía práctica de úlceras por presión (n.º 1). Servicio Gallego de Salud, 2017, pp. 41 y 47. CC BY-SA 4.0.",
+          "respuestas": []
+        },
+        {
+          "id": "r3",
+          "tipo": "recomendacion",
+          "texto": "Hay que retirar el tejido no viable, si el estado de la persona lo permite y la herida está bien perfundida. Elige el método según la persona, el tejido y el contexto:\n\n• Autolítico: hidrogel con un apósito secundario. Es el más selectivo y el menos doloroso, pero el más lento.\n• Enzimático (colagenasa): protege la piel perilesional y renueva la cura cada 24 horas. No la combines con productos con plata o yodo, porque la inactivan.\n• Cortante: a pie de cama, con asepsia, por planos y en varias sesiones. Con precaución si hay inmunosupresión o trastornos de la coagulación.\n\nTrata el dolor antes de desbridar. Si hay celulitis o sepsis, el desbridamiento quirúrgico es urgente: avisa al médico. En una persona en situación terminal, prioriza el confort.\n\nEn cada cura, limpia con suero fisiológico o agua potable a temperatura ambiente, con la mínima presión. Si hay tunelizaciones, rellénalas entre la mitad y tres cuartos de su volumen.",
+          "fuente": "Guía práctica de úlceras por presión (n.º 1). Servicio Gallego de Salud, 2017, pp. 40, 45-50. CC BY-SA 4.0.",
+          "respuestas": []
+        },
+        {
+          "id": "r4",
+          "tipo": "recomendacion",
+          "texto": "Sospecha de infección local.\n\nIntensifica la limpieza y el desbridamiento. Valora un antiséptico (povidona yodada, polihexanida, clorhexidina) o un apósito de plata durante un tiempo limitado, y retíralo cuando la infección esté controlada. No uses agua oxigenada. Evita el yodo si hay insuficiencia renal, problemas de tiroides o sensibilidad al yodo.\n\nSi hay más de una úlcera, empieza por la menos contaminada y no compartas material.\n\nEl diagnóstico es clínico: un frotis con hisopo solo dice qué bacterias colonizan la herida.\n\nSi hay signos de infección sistémica (celulitis, fascitis, osteomielitis, sepsis), avisa al médico: los antibióticos sistémicos se reservan para esos casos.",
+          "fuente": "Guía práctica de úlceras por presión (n.º 1). Servicio Gallego de Salud, 2017, pp. 51-53. CC BY-SA 4.0.",
+          "respuestas": []
+        },
+        {
+          "id": "r5",
+          "tipo": "recomendacion",
+          "texto": "Usa un apósito con mucha capacidad de absorción: alginato, hidrofibra o espuma de poliuretano.\n\nProtege la piel perilesional de la maceración con crema de óxido de zinc o película barrera.\n\nSi el exudado ha aumentado o ha cambiado de aspecto, vuelve a valorar si hay infección.\n\nEn cada cura, limpia con suero fisiológico o agua potable a temperatura ambiente, con la mínima presión. Si hay tunelizaciones, rellénalas entre la mitad y tres cuartos de su volumen.",
+          "fuente": "Guía práctica de úlceras por presión (n.º 1). Servicio Gallego de Salud, 2017, pp. 40, 46, 53-54. CC BY-SA 4.0.",
+          "respuestas": []
+        },
+        {
+          "id": "r6",
+          "tipo": "recomendacion",
+          "texto": "Aporta humedad con un hidrogel, indicado en úlceras no infectadas y en fase de granulación, y mantén la cura en ambiente húmedo.\n\nNo seques el tejido de granulación. Si la piel perilesional es frágil, usa apósitos de espuma con silicona.\n\nEn cada cura, limpia con suero fisiológico o agua potable a temperatura ambiente, con la mínima presión. Si no hay signos de curación pese a los cuidados, vuelve a valorar a la persona, la úlcera y el plan de cuidados.",
+          "fuente": "Guía práctica de úlceras por presión (n.º 1). Servicio Gallego de Salud, 2017, pp. 41, 46, 53-54. CC BY-SA 4.0.",
+          "respuestas": []
+        }
+      ]
+    }
+  }
+]
