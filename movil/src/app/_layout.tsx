@@ -43,7 +43,7 @@ export default function Navegacion() {
       <Stack>
         {/* El menú no lleva cabecera: tiene su logo. */}
         <Stack.Screen name="index" options={{ title: "Inicio", headerShown: false }} />
-        <Stack.Screen name="calculadora/index" options={{ title: "Calculadora" }} />
+        <Stack.Screen name="calculadora/index" options={{ title: "Calculadora", headerShown: false }} />
         <Stack.Screen name="farmacos/index" options={{ title: "Fármacos" }} />
         <Stack.Screen name="farmacos/[id]" options={{ title: "" }} />
         <Stack.Screen name="escalas/index" options={{ title: "Escalas" }} />
