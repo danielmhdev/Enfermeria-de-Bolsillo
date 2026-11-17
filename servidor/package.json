@@ -8,6 +8,7 @@
     "start": "tsx src/servidor.ts",
     "migrar": "tsx --env-file-if-exists=.env src/migrar.ts",
     "publicar": "tsx --env-file-if-exists=.env src/publicar.ts",
+    "publicar:produccion": "tsx --env-file=.env.produccion src/publicar.ts",
     "test": "tsx --test src/*.test.ts",
     "comprobar": "tsc --noEmit"
   },
