@@ -1,26 +1,32 @@
-import { useEffect, useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Link, type Href } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import { Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { router, useFocusEffect, type Href } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSQLiteContext } from "expo-sqlite";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AvisoLegal } from "@/componentes/aviso-legal";
+import { Texto } from "@/componentes/texto";
 import { AjusteRepositorio } from "@/datos/ajuste-repositorio";
 import { sincronizar } from "@/datos/sincronizacion";
+import { TareaRepositorio } from "@/datos/tarea-repositorio";
+import { formatearEspera, proximaAlerta, Tarea } from "@/dominio/tarea";
 import { colores } from "@/tema/colores";
 
-const SECCIONES: { ruta: Href; nombre: string; detalle: string }[] = [
-  { ruta: "/calculadora", nombre: "Calculadora", detalle: "Goteo, dosis y diluciones" },
-  { ruta: "/farmacos", nombre: "Fármacos", detalle: "Buscador y comprobación de dosis" },
-  { ruta: "/escalas", nombre: "Escalas", detalle: "Escalas de valoración" },
-  { ruta: "/guia", nombre: "Guía", detalle: "Guía de curas" },
-  { ruta: "/tareas", nombre: "Tareas", detalle: "Tareas del turno y alertas" },
+const SECCIONES: { ruta: Href; nombre: string; icono: keyof typeof Ionicons.glyphMap }[] = [
+  { ruta: "/calculadora", nombre: "Calculadora", icono: "calculator-outline" },
+  { ruta: "/farmacos", nombre: "Fármacos", icono: "medkit-outline" },
+  { ruta: "/escalas", nombre: "Escalas", icono: "pulse-outline" },
+  { ruta: "/guia", nombre: "Guía de curas", icono: "bandage-outline" },
 ];
 
 // La primera vez muestra el aviso legal; después, el menú.
 export default function PantallaInicio() {
   const db = useSQLiteContext();
+  const margenes = useSafeAreaInsets();
 
   // null mientras se consulta la base de datos.
   const [aceptado, setAceptado] = useState<boolean | null>(null);
+  const [tareas, setTareas] = useState<Tarea[]>([]);
 
   useEffect(() => {
     new AjusteRepositorio(db)
@@ -28,6 +34,13 @@ export default function PantallaInicio() {
       .then((valor) => setAceptado(valor !== null));
     sincronizar(db);
   }, [db]);
+
+  // El Inicio no se desmonta al abrir una sección: se recarga cada vez que vuelve delante.
+  useFocusEffect(
+    useCallback(() => {
+      new TareaRepositorio(db).todas().then(setTareas);
+    }, [db]),
+  );
 
   // Guarda la fecha de aceptación (R11F03T01).
   async function aceptar() {
@@ -42,11 +55,25 @@ export default function PantallaInicio() {
     return <AvisoLegal alAceptar={aceptar} />;
   }
 
+  const pendientes = tareas.filter((tarea) => !tarea.completada).length;
+  const ahora = new Date();
+  const proxima = proximaAlerta(tareas, ahora);
+
+  let resumen = "No tienes tareas pendientes.";
+  if (proxima !== null) {
+    const minutos = Math.ceil((proxima.horaAlerta!.getTime() - ahora.getTime()) / 60000);
+    resumen = `Próximo aviso en ${formatearEspera(minutos)}: ${proxima.texto}`;
+  } else if (pendientes > 0) {
+    resumen = "Ninguna tiene aviso.";
+  }
+
   return (
     <ScrollView
       style={styles.pantalla}
-      contentContainerStyle={styles.contenedor}
-      contentInsetAdjustmentBehavior="automatic"
+      contentContainerStyle={[
+        styles.contenedor,
+        { paddingTop: margenes.top + 16, paddingBottom: margenes.bottom + 8 },
+      ]}
     >
       <View style={styles.cabecera}>
         <Image
@@ -55,33 +82,98 @@ export default function PantallaInicio() {
           resizeMode="contain"
           accessibilityLabel="Enfermería de Bolsillo"
         />
+        <Texto variante="titulo" accessibilityRole="header">
+          Buen turno
+        </Texto>
+        <Texto variante="subtitulo">¿Qué necesitas ahora?</Texto>
       </View>
 
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.push("/tareas")}
+        style={({ pressed }) => [styles.tareas, pressed && styles.pulsado]}
+      >
+        <View style={styles.filaTareas}>
+          <Texto variante="seccion">Tareas</Texto>
+          <View style={styles.contador}>
+            <Texto variante="etiqueta">
+              {pendientes} {pendientes === 1 ? "pendiente" : "pendientes"}
+            </Texto>
+          </View>
+        </View>
+        <Texto>{resumen}</Texto>
+      </Pressable>
+
       {SECCIONES.map((seccion) => (
-        <Link key={seccion.nombre} href={seccion.ruta} asChild>
-          <Pressable style={styles.tarjeta}>
-            <Text style={styles.nombre}>{seccion.nombre}</Text>
-            <Text style={styles.detalle}>{seccion.detalle}</Text>
-          </Pressable>
-        </Link>
+        <Pressable
+          key={seccion.nombre}
+          accessibilityRole="button"
+          onPress={() => router.push(seccion.ruta)}
+          style={({ pressed }) => [styles.seccion, pressed && styles.pulsado]}
+        >
+          <View style={styles.icono}>
+            <Ionicons name={seccion.icono} size={24} color={colores.acento} />
+          </View>
+          <Texto variante="seccion" style={styles.nombre}>
+            {seccion.nombre}
+          </Texto>
+          <Ionicons name="chevron-forward" size={22} color={colores.acento} />
+        </Pressable>
       ))}
+
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => setAceptado(false)}
+        style={styles.enlace}
+      >
+        <Texto variante="etiqueta" style={styles.enlaceTexto}>
+          Aviso legal
+        </Texto>
+      </Pressable>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  pantalla: { flex: 1, backgroundColor: colores.fondo },
-  contenedor: { padding: 16, gap: 12 },
-  cabecera: { alignItems: "center", marginVertical: 16 },
+  pantalla: { flex: 1, backgroundColor: colores.blanco },
+  contenedor: { flexGrow: 1, paddingHorizontal: 16, gap: 10 },
+  cabecera: { paddingHorizontal: 8, marginBottom: 40, gap: 4 },
   // Misma proporción que la imagen (892 x 461).
-  logo: { width: "80%", height: undefined, aspectRatio: 892 / 461 },
-  tarjeta: {
-    minHeight: 72,
-    justifyContent: "center",
-    padding: 16,
-    borderRadius: 12,
-    backgroundColor: colores.primario,
+  logo: {
+    height: 48,
+    width: undefined,
+    aspectRatio: 892 / 461,
+    alignSelf: "flex-start",
+    marginBottom: 12,
   },
-  nombre: { color: colores.texto, fontSize: 20, fontWeight: "600" },
-  detalle: { color: colores.texto, fontSize: 14 },
+  tareas: { padding: 18, gap: 12, borderRadius: 28, backgroundColor: colores.primario },
+  filaTareas: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  contador: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 999,
+    backgroundColor: colores.blanco,
+  },
+  seccion: {
+    minHeight: 72,
+    paddingLeft: 12,
+    paddingRight: 18,
+    borderRadius: 36,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+    backgroundColor: colores.menta,
+  },
+  icono: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colores.blanco,
+  },
+  nombre: { flex: 1 },
+  pulsado: { opacity: 0.85 },
+  enlace: { minHeight: 48, alignSelf: "center", justifyContent: "center", paddingHorizontal: 12 },
+  enlaceTexto: { color: colores.acento },
 });

@@ -36,6 +36,30 @@ export function validarTexto(texto: string): string {
   return limpio;
 }
 
+// «25 min», «1 h 40 min» o «2 h».
+export function formatearEspera(minutos: number): string {
+  const horas = Math.floor(minutos / 60);
+  const resto = minutos % 60;
+  if (horas === 0) {
+    return `${resto} min`;
+  }
+  return resto === 0 ? `${horas} h` : `${horas} h ${resto} min`;
+}
+
+// La tarea pendiente cuya alerta llega antes; null si ninguna tiene alerta pendiente.
+export function proximaAlerta(tareas: Tarea[], ahora: Date): Tarea | null {
+  let proxima: Tarea | null = null;
+  for (const tarea of tareas) {
+    if (tarea.completada || !tarea.alertaPendiente(ahora)) {
+      continue;
+    }
+    if (proxima === null || tarea.horaAlerta! < proxima.horaAlerta!) {
+      proxima = tarea;
+    }
+  }
+  return proxima;
+}
+
 // 12 horas o más desde la primera tarea (R06F03T02).
 export function turnoCaducado(primeraTarea: Date, ahora: Date): boolean {
   const milisegundos = ahora.getTime() - primeraTarea.getTime();

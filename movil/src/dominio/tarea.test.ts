@@ -1,4 +1,11 @@
-import { LONGITUD_MAXIMA, Tarea, turnoCaducado, validarTexto } from "./tarea";
+import {
+  formatearEspera,
+  LONGITUD_MAXIMA,
+  proximaAlerta,
+  Tarea,
+  turnoCaducado,
+  validarTexto,
+} from "./tarea";
 
 describe("validarTexto", () => {
   test("quita los espacios del principio y del final", () => {
@@ -43,5 +50,41 @@ describe("alertaPendiente", () => {
 
   test("una alerta que ya ha pasado no está pendiente", () => {
     expect(tareaConAlerta("2026-11-15T09:30:00").alertaPendiente(ahora)).toBe(false);
+  });
+});
+
+describe("formatearEspera", () => {
+  test("menos de una hora", () => {
+    expect(formatearEspera(25)).toBe("25 min");
+  });
+
+  test("horas y minutos", () => {
+    expect(formatearEspera(100)).toBe("1 h 40 min");
+  });
+
+  test("horas justas", () => {
+    expect(formatearEspera(120)).toBe("2 h");
+  });
+});
+
+describe("proximaAlerta", () => {
+  const ahora = new Date("2026-11-15T10:00:00");
+
+  function tarea(id: number, completada: boolean, hora: string | null) {
+    return new Tarea(id, `Tarea ${id}`, "normal", completada, hora === null ? null : new Date(hora), null, ahora);
+  }
+
+  test("elige la alerta más cercana", () => {
+    const tareas = [tarea(1, false, "2026-11-15T11:00:00"), tarea(2, false, "2026-11-15T10:30:00")];
+    expect(proximaAlerta(tareas, ahora)?.id).toBe(2);
+  });
+
+  test("ignora las completadas, las ya pasadas y las que no tienen alerta", () => {
+    const tareas = [
+      tarea(1, true, "2026-11-15T10:10:00"),
+      tarea(2, false, "2026-11-15T09:30:00"),
+      tarea(3, false, null),
+    ];
+    expect(proximaAlerta(tareas, ahora)).toBeNull();
   });
 });
