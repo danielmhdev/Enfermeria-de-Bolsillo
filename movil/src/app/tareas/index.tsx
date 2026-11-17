@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
-import { Alert, FlatList, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  AppState,
+  FlatList,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
+import { limpiarTurnoCaducado } from "@/datos/base-datos";
 import {
   cancelarAlerta,
   cancelarTodasLasAlertas,
@@ -30,7 +41,19 @@ export default function PantallaTareas() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    new TareaRepositorio(db).todas().then(setTareas);
+    const repositorio = new TareaRepositorio(db);
+    async function cargar() {
+      await limpiarTurnoCaducado(db);
+      setTareas(await repositorio.todas());
+    }
+    cargar();
+    // Al volver a la app desde segundo plano.
+    const suscripcion = AppState.addEventListener("change", (estado) => {
+      if (estado === "active") {
+        cargar();
+      }
+    });
+    return () => suscripcion.remove();
   }, [db]);
 
   async function recargar() {
@@ -67,11 +90,19 @@ export default function PantallaTareas() {
   }
 
   async function marcar(tarea: Tarea) {
-    // Una tarea hecha ya no necesita avisar.
-    if (!tarea.completada && tarea.notificacionId !== null) {
-      await cancelarAlerta(tarea.notificacionId);
+    if (!tarea.completada) {
+      // Una tarea hecha ya no necesita avisar.
+      if (tarea.notificacionId !== null) {
+        await cancelarAlerta(tarea.notificacionId);
+      }
+      await repositorio.marcar(tarea.id, true, null);
+    } else {
+      // Al desmarcarla, su alerta vuelve si aún no ha pasado la hora.
+      const notificacionId = tarea.alertaPendiente(new Date())
+        ? await programarAlerta(tarea.horaAlerta!)
+        : null;
+      await repositorio.marcar(tarea.id, false, notificacionId);
     }
-    await repositorio.marcar(tarea.id, !tarea.completada);
     await recargar();
   }
 

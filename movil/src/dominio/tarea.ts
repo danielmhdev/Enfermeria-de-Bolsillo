@@ -18,8 +18,9 @@ export class Tarea {
     public readonly creadaEn: Date
   ) {}
 
-  tieneAlerta(): boolean {
-    return this.horaAlerta !== null;
+  // Tiene alerta y su hora aún no ha llegado.
+  alertaPendiente(ahora: Date): boolean {
+    return this.horaAlerta !== null && this.horaAlerta > ahora;
   }
 }
 

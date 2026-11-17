@@ -9,9 +9,12 @@ export async function iniciarBaseDatos(db: SQLiteDatabase): Promise<void> {
 
   await cargarContenidoInicial(db);
 
-  // Tareas y alertas de un turno ya pasado (R06F03T02).
-  const borradas = await new TareaRepositorio(db).borrarSiCaducadas();
-  if (borradas) {
+  await limpiarTurnoCaducado(db);
+}
+
+// Tareas y alertas de un turno ya pasado (R06F03T02).
+export async function limpiarTurnoCaducado(db: SQLiteDatabase): Promise<void> {
+  if (await new TareaRepositorio(db).borrarSiCaducadas()) {
     await cancelarTodasLasAlertas();
   }
 }

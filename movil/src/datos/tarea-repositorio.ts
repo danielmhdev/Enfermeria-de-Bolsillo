@@ -57,10 +57,11 @@ export class TareaRepositorio {
     );
   }
 
-  async marcar(id: number, completada: boolean): Promise<void> {
+  async marcar(id: number, completada: boolean, notificacionId: string | null): Promise<void> {
     await this.db.runAsync(
-      "UPDATE tarea SET completada = ? WHERE id = ?",
+      "UPDATE tarea SET completada = ?, notificacion_id = ? WHERE id = ?",
       completada ? 1 : 0,
+      notificacionId,
       id
     );
   }
