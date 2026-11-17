@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import Stack from "expo-router/stack";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSQLiteContext } from "expo-sqlite";
+import { Boton } from "@/componentes/boton";
+import { Cabecera } from "@/componentes/cabecera";
+import { Pie } from "@/componentes/pie";
+import { Tarjeta } from "@/componentes/tarjeta";
+import { Texto } from "@/componentes/texto";
 import { GuiaRepositorio } from "@/datos/guia-repositorio";
 import { Guia } from "@/dominio/guia";
 import { colores } from "@/tema/colores";
+import { fuentes } from "@/tema/fuentes";
 
 export default function PantallaGuia() {
   const { codigo } = useLocalSearchParams<{ codigo: string }>();
@@ -27,95 +33,124 @@ export default function PantallaGuia() {
   }
 
   const nodo = guia.nodo(camino[camino.length - 1]);
+  // Preguntas por las que se ha pasado, contando la actual.
+  const numero = camino.filter((id) => guia.nodo(id).tipo === "pregunta").length;
+  // La recomendación se parte por párrafos sin cambiar los datos.
+  const [principal, ...resto] = nodo.texto.split("\n\n");
+
+  // Botón de volver (R05F01T01): quita el último paso.
+  function volver() {
+    setCamino(camino.slice(0, -1));
+  }
 
   return (
-    <ScrollView
-      style={styles.pantalla}
-      contentContainerStyle={styles.contenedor}
-      contentInsetAdjustmentBehavior="automatic"
-    >
-      <Stack.Screen options={{ title: guia.nombre }} />
+    <View style={styles.pantalla}>
+      <Cabecera titulo="Guía de curas" subtitulo={guia.nombre} volver="Guías" />
 
-      {nodo.tipo === "pregunta" ? (
-        <View style={styles.bloque}>
-          <Text style={styles.pregunta}>{nodo.texto}</Text>
-          {nodo.respuestas.map((respuesta) => (
-            <Pressable
-              key={respuesta.texto}
-              style={styles.opcion}
-              onPress={() => setCamino([...camino, respuesta.siguiente])}
-            >
-              <Text style={styles.opcionTexto}>{respuesta.texto}</Text>
-            </Pressable>
-          ))}
-        </View>
+      <ScrollView contentContainerStyle={styles.contenedor}>
+        {nodo.tipo === "pregunta" ? (
+          <>
+            <Tarjeta destacada>
+              <Texto variante="etiqueta">Pregunta {numero}</Texto>
+              <Text style={styles.pregunta}>{nodo.texto}</Text>
+            </Tarjeta>
+            {nodo.respuestas.map((respuesta) => (
+              <Pressable
+                key={respuesta.texto}
+                accessibilityRole="button"
+                onPress={() => setCamino([...camino, respuesta.siguiente])}
+                style={({ pressed }) => [styles.respuesta, pressed && styles.pulsado]}
+              >
+                <Text style={styles.respuestaTexto}>{respuesta.texto}</Text>
+                <View style={styles.flecha}>
+                  <Ionicons name="chevron-forward" size={20} color={colores.acento} />
+                </View>
+              </Pressable>
+            ))}
+          </>
+        ) : (
+          // Pantalla de recomendación (R05F02T01).
+          <>
+            <Tarjeta destacada>
+              <View style={styles.fila}>
+                <Ionicons name="checkmark" size={18} color={colores.texto} />
+                <Texto variante="etiqueta">Recomendación</Texto>
+              </View>
+              <Text style={styles.principal}>{principal}</Text>
+            </Tarjeta>
+            {resto.map((parrafo) => (
+              <Tarjeta key={parrafo}>
+                <Texto>{parrafo}</Texto>
+              </Tarjeta>
+            ))}
+          </>
+        )}
+
+        {nodo.fuente !== null && (
+          <Texto variante="nota" style={styles.margen}>
+            Fuente: {nodo.fuente}
+          </Texto>
+        )}
+      </ScrollView>
+
+      {nodo.tipo === "recomendacion" ? (
+        <Pie>
+          <View style={styles.fila}>
+            <Boton texto="Volver" variante="secundario" alPulsar={volver} />
+            <View style={styles.flex}>
+              <Boton
+                texto="Empezar de nuevo"
+                icono="refresh"
+                alPulsar={() => setCamino([guia.arbol.inicio])}
+              />
+            </View>
+          </View>
+        </Pie>
       ) : (
-        // Pantalla de recomendación (R05F02T01).
-        <View style={styles.recomendacion}>
-          <Text style={styles.etiqueta}>Recomendación</Text>
-          <Text style={styles.recomendacionTexto}>{nodo.texto}</Text>
-          {nodo.fuente !== null && <Text style={styles.fuente}>Fuente: {nodo.fuente}</Text>}
-        </View>
+        camino.length > 1 && (
+          <Pie>
+            <Boton
+              texto="Volver a la anterior"
+              variante="secundario"
+              icono="chevron-back"
+              alPulsar={volver}
+            />
+          </Pie>
+        )
       )}
-
-      {/* Botón de volver (R05F01T01): quita el último paso. */}
-      {camino.length > 1 && (
-        <Pressable style={styles.secundario} onPress={() => setCamino(camino.slice(0, -1))}>
-          <Text style={styles.secundarioTexto}>← Volver</Text>
-        </Pressable>
-      )}
-
-      {nodo.tipo === "recomendacion" && (
-        <Pressable style={styles.boton} onPress={() => setCamino([guia.arbol.inicio])}>
-          <Text style={styles.botonTexto}>Empezar de nuevo</Text>
-        </Pressable>
-      )}
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  pantalla: { flex: 1, backgroundColor: colores.fondo },
-  contenedor: { padding: 16, gap: 16 },
-  bloque: { gap: 8 },
-  pregunta: { color: colores.texto, fontSize: 18, fontWeight: "600" },
-  opcion: {
-    minHeight: 48,
-    justifyContent: "center",
-    paddingHorizontal: 12,
+  pantalla: { flex: 1, backgroundColor: colores.blanco },
+  contenedor: { padding: 16, paddingBottom: 24, gap: 10 },
+  fila: { flexDirection: "row", alignItems: "center", gap: 6 },
+  flex: { flex: 1 },
+  pregunta: { fontFamily: fuentes.extra, fontSize: 20, lineHeight: 26, color: colores.texto },
+  principal: { fontFamily: fuentes.extra, fontSize: 18, lineHeight: 25, color: colores.texto },
+  respuesta: {
+    minHeight: 56,
+    paddingLeft: 18,
+    paddingRight: 10,
     paddingVertical: 8,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colores.borde,
-    backgroundColor: colores.superficie,
-  },
-  opcionTexto: { color: colores.texto, fontSize: 16 },
-  recomendacion: {
-    padding: 12,
-    gap: 8,
-    borderRadius: 8,
+    borderRadius: 28,
     borderWidth: 2,
-    borderColor: colores.acento,
-    backgroundColor: colores.superficie,
-  },
-  etiqueta: { color: colores.acento, fontSize: 14, fontWeight: "600" },
-  recomendacionTexto: { color: colores.texto, fontSize: 18 },
-  fuente: { color: colores.textoSecundario, fontSize: 14 },
-  secundario: {
-    minHeight: 48,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 8,
-    borderWidth: 1,
     borderColor: colores.borde,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    backgroundColor: colores.blanco,
   },
-  secundarioTexto: { color: colores.texto, fontSize: 16 },
-  boton: {
-    minHeight: 48,
+  respuestaTexto: { flex: 1, fontFamily: fuentes.extra, fontSize: 17, lineHeight: 22, color: colores.texto },
+  flecha: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 8,
-    backgroundColor: colores.primario,
+    backgroundColor: colores.menta,
   },
-  botonTexto: { color: colores.texto, fontSize: 16, fontWeight: "600" },
+  margen: { marginHorizontal: 8 },
+  pulsado: { opacity: 0.85 },
 });
