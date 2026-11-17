@@ -1,5 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { colores } from "@/tema/colores";
+import { fuentes } from "@/tema/fuentes";
 
 type Props = {
   etiqueta: string;
@@ -8,41 +9,41 @@ type Props = {
   alCambiar: (texto: string) => void;
 };
 
-// Campo numérico con su etiqueta y su unidad.
+// Campo numérico con su etiqueta encima y la unidad dentro.
 export function CampoNumero({ etiqueta, unidad, valor, alCambiar }: Props) {
   return (
     <View style={styles.campo}>
-      <Text style={styles.etiqueta}>
-        {etiqueta} ({unidad})
-      </Text>
-      <TextInput
-        style={styles.entrada}
-        value={valor}
-        onChangeText={alCambiar}
-        keyboardType="decimal-pad"
-        placeholder="0"
-        placeholderTextColor={colores.textoSecundario}
-      />
+      <Text style={styles.etiqueta}>{etiqueta}</Text>
+      <View style={styles.caja}>
+        <TextInput
+          style={styles.entrada}
+          value={valor}
+          onChangeText={alCambiar}
+          keyboardType="decimal-pad"
+          placeholder="0"
+          placeholderTextColor={colores.textoSecundario}
+          accessibilityLabel={`${etiqueta} en ${unidad}`}
+        />
+        <Text style={styles.unidad}>{unidad}</Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  campo: {
-    gap: 4,
-  },
-  etiqueta: {
-    color: colores.textoSecundario,
-    fontSize: 14,
-  },
-  entrada: {
-    minHeight: 48,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    borderWidth: 1,
+  campo: { gap: 8 },
+  etiqueta: { fontFamily: fuentes.extra, fontSize: 16, color: colores.texto },
+  caja: {
+    height: 60,
+    paddingHorizontal: 18,
+    borderRadius: 20,
+    borderWidth: 2,
     borderColor: colores.borde,
-    backgroundColor: colores.superficie,
-    color: colores.texto,
-    fontSize: 18,
+    backgroundColor: colores.blanco,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
+  entrada: { flex: 1, fontFamily: fuentes.extra, fontSize: 24, color: colores.texto },
+  unidad: { fontFamily: fuentes.negrita, fontSize: 17, color: colores.textoSecundario },
 });

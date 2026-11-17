@@ -21,4 +21,11 @@ export const colores = {
   avisoTexto: "#6B4A00",
   correctoFondo: "#DDF3E4",
   correctoTexto: "#1D5B33",
+
+  // Estilo «Menta amable»
+  blanco: "#FFFFFF",
+  menta: "#EEF7F4", // tarjetas y botones secundarios
+  bordeSuave: "#DCE3EA", // solo para separar
+  avisoBorde: "#D9A21B",
+  errorBorde: "#C62828",
 };
