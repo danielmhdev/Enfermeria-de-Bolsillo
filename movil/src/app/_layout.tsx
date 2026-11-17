@@ -44,8 +44,8 @@ export default function Navegacion() {
         {/* El menú no lleva cabecera: tiene su logo. */}
         <Stack.Screen name="index" options={{ title: "Inicio", headerShown: false }} />
         <Stack.Screen name="calculadora/index" options={{ title: "Calculadora", headerShown: false }} />
-        <Stack.Screen name="farmacos/index" options={{ title: "Fármacos" }} />
-        <Stack.Screen name="farmacos/[id]" options={{ title: "" }} />
+        <Stack.Screen name="farmacos/index" options={{ title: "Fármacos", headerShown: false }} />
+        <Stack.Screen name="farmacos/[id]" options={{ title: "", headerShown: false }} />
         <Stack.Screen name="escalas/index" options={{ title: "Escalas" }} />
         <Stack.Screen name="escalas/[codigo]" options={{ title: "" }} />
         <Stack.Screen name="guia/index" options={{ title: "Guía de curas" }} />

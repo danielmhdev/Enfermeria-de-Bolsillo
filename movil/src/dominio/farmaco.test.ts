@@ -1,4 +1,4 @@
-import { RangoDosis, type TipoDosis } from "./farmaco";
+import { Farmaco, RangoDosis, type TipoDosis, type Via } from "./farmaco";
 
 // Rango de prueba: solo importan el tipo y los límites.
 function rango(tipo: TipoDosis, min: number, max: number): RangoDosis {
@@ -33,5 +33,62 @@ describe("RangoDosis", () => {
 
   test("un rango por kilo sin peso da error", () => {
     expect(() => rango("por_kg", 1, 1.5).limitesMg(null)).toThrow();
+  });
+});
+
+describe("correspondeAPeso", () => {
+  // Rango de 33 a 50 kg, como el de paracetamol.
+  const conLimites = new RangoDosis(
+    1, "IV", "Prueba", "por_kg", 15, 15, null, null, 33, 50, null, "Fuente", "https://ejemplo.es"
+  );
+
+  test("sin límites de peso vale para cualquier peso", () => {
+    expect(rango("fija", 400, 1000).correspondeAPeso(120)).toBe(true);
+  });
+
+  test("dentro de los límites, incluidos los extremos", () => {
+    expect(conLimites.correspondeAPeso(45)).toBe(true);
+    expect(conLimites.correspondeAPeso(50)).toBe(true);
+  });
+
+  test("fuera de los límites", () => {
+    expect(conLimites.correspondeAPeso(30)).toBe(false);
+    expect(conLimites.correspondeAPeso(60)).toBe(false);
+  });
+});
+
+describe("tieneVia", () => {
+  function rangoPorVia(via: Via): RangoDosis {
+    return new RangoDosis(
+      1, via, "Prueba", "fija", 1, 1, null, null, null, null, null, "Fuente", "https://ejemplo.es"
+    );
+  }
+
+  test("un fármaco con rangos IV y SC tiene vía SC", () => {
+    expect(new Farmaco(1, "Prueba", [rangoPorVia("IV"), rangoPorVia("SC")]).tieneVia("SC")).toBe(true);
+  });
+
+  test("un fármaco solo IV no tiene vía SC", () => {
+    expect(new Farmaco(1, "Prueba", [rangoPorVia("IV")]).tieneVia("SC")).toBe(false);
+  });
+});
+
+describe("textoPeso", () => {
+  function conPeso(min: number | null, max: number | null): RangoDosis {
+    return new RangoDosis(
+      1, "IV", "Prueba", "fija", 1, 1, null, null, min, max, null, "Fuente", "https://ejemplo.es"
+    );
+  }
+
+  test("con los dos límites", () => {
+    expect(conPeso(33, 50).textoPeso()).toBe("33 a 50 kg");
+  });
+
+  test("solo con mínimo", () => {
+    expect(conPeso(53, null).textoPeso()).toBe("53 kg o más");
+  });
+
+  test("sin límites", () => {
+    expect(conPeso(null, null).textoPeso()).toBeNull();
   });
 });
