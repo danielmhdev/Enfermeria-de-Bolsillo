@@ -4,6 +4,7 @@ import { Link, type Href } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { AvisoLegal } from "@/componentes/aviso-legal";
 import { AjusteRepositorio } from "@/datos/ajuste-repositorio";
+import { sincronizar } from "@/datos/sincronizacion";
 import { colores } from "@/tema/colores";
 
 const SECCIONES: { ruta: Href; nombre: string; detalle: string }[] = [
@@ -25,6 +26,7 @@ export default function PantallaInicio() {
     new AjusteRepositorio(db)
       .leer("aviso_aceptado_en")
       .then((valor) => setAceptado(valor !== null));
+    sincronizar(db);
   }, [db]);
 
   // Guarda la fecha de aceptación (R11F03T01).
