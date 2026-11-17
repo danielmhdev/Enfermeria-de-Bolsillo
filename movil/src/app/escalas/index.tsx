@@ -11,7 +11,6 @@ export default function PantallaEscalas() {
 
   const [escalas, setEscalas] = useState<Escala[]>([]);
 
-  // Las escalas se leen una vez, al abrir la pantalla.
   useEffect(() => {
     new EscalaRepositorio(db).todas().then(setEscalas);
   }, [db]);

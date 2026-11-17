@@ -6,7 +6,6 @@ import { AvisoLegal } from "@/componentes/aviso-legal";
 import { AjusteRepositorio } from "@/datos/ajuste-repositorio";
 import { colores } from "@/tema/colores";
 
-// Secciones de la app. Cada una lleva a su pantalla.
 const SECCIONES: { ruta: Href; nombre: string; detalle: string }[] = [
   { ruta: "/calculadora", nombre: "Calculadora", detalle: "Goteo, dosis y diluciones" },
   { ruta: "/farmacos", nombre: "Fármacos", detalle: "Buscador y comprobación de dosis" },
@@ -15,22 +14,20 @@ const SECCIONES: { ruta: Href; nombre: string; detalle: string }[] = [
   { ruta: "/tareas", nombre: "Tareas", detalle: "Tareas del turno y alertas" },
 ];
 
-// Pantalla de inicio. La primera vez muestra el aviso legal; después, el menú
-// con el logo y un botón grande por cada sección.
+// La primera vez muestra el aviso legal; después, el menú.
 export default function PantallaInicio() {
   const db = useSQLiteContext();
 
   // null mientras se consulta la base de datos.
   const [aceptado, setAceptado] = useState<boolean | null>(null);
 
-  // Al abrir la app se mira si el aviso legal ya está aceptado.
   useEffect(() => {
     new AjusteRepositorio(db)
       .leer("aviso_aceptado_en")
       .then((valor) => setAceptado(valor !== null));
   }, [db]);
 
-  // Guarda la fecha de la aceptación y da paso al menú (R11F03T01).
+  // Guarda la fecha de aceptación (R11F03T01).
   async function aceptar() {
     await new AjusteRepositorio(db).guardar("aviso_aceptado_en", new Date().toISOString());
     setAceptado(true);
@@ -50,7 +47,6 @@ export default function PantallaInicio() {
       contentInsetAdjustmentBehavior="automatic"
     >
       <View style={styles.cabecera}>
-        {/* El logo ya incluye el nombre de la app. */}
         <Image
           style={styles.logo}
           source={require("@/assets/images/logo.png")}

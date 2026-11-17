@@ -5,7 +5,7 @@ type Props = {
   alAceptar: () => void;
 };
 
-// Aviso del primer inicio: hay que aceptarlo para entrar en la app (R11F03T01).
+// Aviso del primer inicio (R11F03T01).
 export function AvisoLegal({ alAceptar }: Props) {
   return (
     <ScrollView

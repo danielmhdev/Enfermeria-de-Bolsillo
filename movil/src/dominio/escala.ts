@@ -1,4 +1,4 @@
-// Partes de una escala. Tienen la misma forma que el JSON guardado en escala.definicion.
+// Misma forma que el JSON de escala.definicion.
 export type Opcion = { texto: string; puntos: number; variante: string | null };
 export type ItemEscala = { id: string; texto: string; opciones: Opcion[] };
 export type Tramo = { min: number; max: number; texto: string };
@@ -12,10 +12,9 @@ export type DefinicionEscala = {
   interpretacion: Tramo[];
 };
 
-// Opción elegida en cada ítem. La clave es el id del ítem.
+// Opción elegida en cada ítem, por id de ítem.
 export type Respuestas = Record<string, Opcion>;
 
-// Escala de valoración: Glasgow, Braden o NEWS2.
 export class Escala {
   constructor(
     public readonly codigo: string,
@@ -23,7 +22,7 @@ export class Escala {
     public readonly definicion: DefinicionEscala
   ) {}
 
-  // Opciones de un ítem para la variante elegida en el selector (R04F02T02).
+  // Opciones de un ítem para la variante elegida (R04F02T02).
   // Las opciones sin variante valen siempre.
   opcionesDe(item: ItemEscala, variante: string | null): Opcion[] {
     return item.opciones.filter(
@@ -31,7 +30,7 @@ export class Escala {
     );
   }
 
-  // Suma los puntos de las respuestas. Devuelve null si falta algún ítem (R04F01T01).
+  // null si falta algún ítem (R04F01T01).
   total(respuestas: Respuestas): number | null {
     let suma = 0;
     for (const item of this.definicion.items) {
@@ -44,7 +43,7 @@ export class Escala {
     return suma;
   }
 
-  // Texto del tramo al que pertenece el total, o null si no está en ninguno.
+  // null si el total no está en ningún tramo.
   interpretar(total: number): string | null {
     for (const tramo of this.definicion.interpretacion) {
       if (total >= tramo.min && total <= tramo.max) {
@@ -54,7 +53,7 @@ export class Escala {
     return null;
   }
 
-  // Indica si algún ítem tiene la puntuación de alerta de la escala (R04F01T02).
+  // Algún ítem tiene la puntuación de alerta (R04F01T02).
   parametroRojo(respuestas: Respuestas): boolean {
     const alerta = this.definicion.avisoSiItemPuntua;
     if (alerta === null) {

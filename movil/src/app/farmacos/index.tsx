@@ -7,13 +7,12 @@ import { Farmaco } from "@/dominio/farmaco";
 import { colores } from "@/tema/colores";
 
 export default function PantallaFarmacos() {
-  // La base de datos que abrió SQLiteProvider en _layout.tsx.
   const db = useSQLiteContext();
 
   const [texto, setTexto] = useState("");
   const [resultados, setResultados] = useState<Farmaco[]>([]);
 
-  // Cada vez que cambia el texto se vuelve a buscar (resultados mientras se escribe).
+  // Busca mientras se escribe.
   useEffect(() => {
     new FarmacoRepositorio(db).buscar(texto).then(setResultados);
   }, [db, texto]);
@@ -42,7 +41,6 @@ export default function PantallaFarmacos() {
         <Text style={styles.vacio}>No hay fármacos con ese nombre.</Text>
       }
       renderItem={({ item }) => (
-        // Al tocar la fila se abre el detalle del fármaco: /farmacos/3.
         <Link href={`/farmacos/${item.id}`} asChild>
           <Pressable style={styles.fila}>
             <Text style={styles.nombre}>{item.nombre}</Text>

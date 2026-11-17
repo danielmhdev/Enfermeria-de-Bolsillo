@@ -7,10 +7,9 @@ import { colores } from "@/tema/colores";
 
 type Props = { rango: RangoDosis };
 
-// Resultado de la comprobación: si la dosis no supera el máximo y el texto que se muestra.
 type Comprobacion = { correcta: boolean; texto: string };
 
-// Formulario que compara una dosis con el máximo de referencia (R03F02T01).
+// Compara una dosis con el máximo de referencia (R03F02T01).
 export function ComprobarDosis({ rango }: Props) {
   const [dosis, setDosis] = useState("");
   const [peso, setPeso] = useState("");
@@ -40,7 +39,7 @@ export function ComprobarDosis({ rango }: Props) {
     try {
       const maximo = `${formatear(rango.limitesMg(pesoKg).max)} mg`;
 
-      // Solo se avisa por encima del máximo; una dosis baja no da aviso.
+      // Solo avisa por encima del máximo.
       if (rango.superaMaximo(dosisMg, pesoKg)) {
         setComprobacion({
           correcta: false,

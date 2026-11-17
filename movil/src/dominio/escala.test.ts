@@ -1,13 +1,12 @@
 import escalasJson from "../datos/contenido/escalas.json";
 import { Escala, type DefinicionEscala, type Respuestas } from "./escala";
 
-// Crea una escala a partir del JSON de contenido.
 function escala(codigo: string): Escala {
   const dato = escalasJson.find((e) => e.codigo === codigo)!;
   return new Escala(dato.codigo, dato.nombre, dato.definicion as DefinicionEscala);
 }
 
-// Responde cada ítem con la opción que vale los puntos indicados, en orden.
+// Responde cada ítem con la opción que vale esos puntos, en orden.
 function responder(e: Escala, puntos: number[], variante: string | null = null): Respuestas {
   const respuestas: Respuestas = {};
   puntos.forEach((valor, i) => {

@@ -1,7 +1,6 @@
 import { type SQLiteDatabase } from "expo-sqlite";
 
 // Tablas de la base de datos local (R01F01T01).
-// Siguen el diagrama de la base de datos de la memoria.
 const ESQUEMA = `
 CREATE TABLE IF NOT EXISTS farmaco (
   id INTEGER PRIMARY KEY NOT NULL,
@@ -54,7 +53,6 @@ CREATE TABLE IF NOT EXISTS ajuste (
 );
 `;
 
-// Se ejecuta cada vez que la app abre la base de datos.
 export async function crearTablas(db: SQLiteDatabase): Promise<void> {
   // SQLite no comprueba las claves ajenas si no se activa en cada conexión.
   await db.execAsync("PRAGMA foreign_keys = ON;");

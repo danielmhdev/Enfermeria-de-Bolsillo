@@ -1,7 +1,6 @@
 import { CalculadoraClinica } from "./calculadora-clinica";
 
-// Pruebas unitarias de las fórmulas de la calculadora (R02).
-// Cada prueba lleva encima el código de la prueba del RFTP que comprueba.
+// Pruebas de las fórmulas de la calculadora (R02).
 describe("CalculadoraClinica", () => {
   // R02F01T01P01: dosis por peso.
   test("5 mg/kg con 70 kg da 350 mg", () => {
@@ -24,7 +23,6 @@ describe("CalculadoraClinica", () => {
   });
 
   // R02F04T01P01: con datos incorrectos no se calcula, se lanza un error.
-  // La llamada va dentro de () => para que Jest pueda capturar el error.
   test("un peso negativo da error", () => {
     expect(() => CalculadoraClinica.dosisPorPeso(-70, 5)).toThrow();
   });

@@ -1,13 +1,12 @@
 import * as Notifications from "expo-notifications";
 
-// Pide permiso para enviar notificaciones. Si ya está dado, no vuelve a preguntar.
+// Si el permiso ya está dado, no vuelve a preguntar.
 export async function pedirPermiso(): Promise<boolean> {
   const permiso = await Notifications.requestPermissionsAsync();
   return permiso.granted;
 }
 
-// Programa una alerta local y devuelve su identificador.
-// El texto es genérico: nunca lleva el texto de la tarea (R06F02T01).
+// El texto es genérico: nunca lleva el de la tarea (R06F02T01).
 export async function programarAlerta(hora: Date): Promise<string> {
   return Notifications.scheduleNotificationAsync({
     content: {

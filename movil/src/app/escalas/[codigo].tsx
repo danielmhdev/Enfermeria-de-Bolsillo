@@ -8,29 +8,28 @@ import { Escala, type Opcion, type Respuestas } from "@/dominio/escala";
 import { colores } from "@/tema/colores";
 
 export default function PantallaEscala() {
-  // El código llega en la ruta: /escalas/news2 da codigo = "news2".
+  // /escalas/news2 da codigo = "news2".
   const { codigo } = useLocalSearchParams<{ codigo: string }>();
   const db = useSQLiteContext();
 
   const [escala, setEscala] = useState<Escala | null>(null);
-  // Variante elegida en el selector (escala 1 o 2 de SpO2). null si la escala no tiene selector.
+  // Escala 1 o 2 de SpO2. null si la escala no tiene selector.
   const [variante, setVariante] = useState<string | null>(null);
   const [respuestas, setRespuestas] = useState<Respuestas>({});
 
   useEffect(() => {
     new EscalaRepositorio(db).porCodigo(codigo).then((leida) => {
       setEscala(leida);
-      // Si la escala tiene selector, se empieza por su variante por defecto.
+      // Se empieza por la variante por defecto.
       setVariante(leida?.definicion.selector?.porDefecto ?? null);
     });
   }, [db, codigo]);
 
-  // Guarda la opción elegida en un ítem, conservando las demás respuestas.
   function responder(itemId: string, opcion: Opcion) {
     setRespuestas({ ...respuestas, [itemId]: opcion });
   }
 
-  // Cambia la variante y borra las respuestas que eran de la otra (R04F02T02).
+  // Al cambiar la variante se borran las respuestas de la otra (R04F02T02).
   function cambiarVariante(nueva: string) {
     const conservadas: Respuestas = {};
     for (const [itemId, opcion] of Object.entries(respuestas)) {
@@ -78,7 +77,7 @@ export default function PantallaEscala() {
       {items.map((item) => (
         <View key={item.id} style={styles.bloque}>
           <Text style={styles.pregunta}>{item.texto}</Text>
-          {/* Un botón por opción, generado desde la definición de la escala (R04F02T01). */}
+          {/* Un botón por opción, según la definición (R04F02T01). */}
           {escala.opcionesDe(item, variante).map((opcion) => {
             const elegida = respuestas[item.id]?.texto === opcion.texto;
             return (

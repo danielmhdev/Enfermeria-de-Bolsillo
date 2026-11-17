@@ -11,7 +11,7 @@ import { TareaRepositorio } from "@/datos/tarea-repositorio";
 import { LONGITUD_MAXIMA, Tarea, validarTexto, type Prioridad } from "@/dominio/tarea";
 import { colores } from "@/tema/colores";
 
-// Opciones del selector de alerta. 0 minutos es «sin alerta».
+// 0 minutos es «sin alerta».
 const ALERTAS = [
   { minutos: 0, texto: "Sin alerta" },
   { minutos: 30, texto: "30 min" },
@@ -29,20 +29,17 @@ export default function PantallaTareas() {
   const [minutosAlerta, setMinutosAlerta] = useState(0);
   const [error, setError] = useState("");
 
-  // Las tareas se leen al abrir la pantalla.
   useEffect(() => {
     new TareaRepositorio(db).todas().then(setTareas);
   }, [db]);
 
-  // Vuelve a leer la lista después de cada cambio en la base de datos.
   async function recargar() {
     setTareas(await repositorio.todas());
   }
 
   async function anadir() {
     try {
-      // Lanza un error si el texto está vacío o es demasiado largo.
-      // Se comprueba antes de programar la alerta.
+      // Se valida antes de programar la alerta.
       validarTexto(texto);
 
       let horaAlerta: Date | null = null;
@@ -78,7 +75,7 @@ export default function PantallaTareas() {
     await recargar();
   }
 
-  // Pide confirmación antes de borrar todas las tareas y sus alertas (R06F03T01).
+  // Pide confirmación antes de borrar (R06F03T01).
   function terminarTurno() {
     Alert.alert("Terminar turno", "Se borrarán todas las tareas y sus alertas.", [
       { text: "Cancelar", style: "cancel" },
@@ -162,7 +159,6 @@ export default function PantallaTareas() {
       }
       ListEmptyComponent={<Text style={styles.vacio}>No hay tareas en este turno.</Text>}
       ListFooterComponent={
-        // El botón solo aparece si hay tareas que borrar.
         tareas.length > 0 ? (
           <Pressable style={styles.terminar} onPress={terminarTurno}>
             <Text style={styles.terminarTexto}>Terminar turno</Text>
@@ -170,7 +166,6 @@ export default function PantallaTareas() {
         ) : undefined
       }
       renderItem={({ item }) => (
-        // Al tocar la fila se marca o se desmarca la tarea.
         <Pressable
           style={styles.fila}
           accessibilityRole="checkbox"

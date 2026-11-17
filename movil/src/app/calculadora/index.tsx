@@ -17,10 +17,8 @@ type TipoCalculo = "dosis" | "concentracion" | "ritmo";
 
 type Campo = { etiqueta: string; unidad: string };
 
-// Lo que se muestra de cada resultado: qué es, cuánto vale y cómo se ha calculado.
 type Resultado = { titulo: string; valor: string; formula: string };
 
-// Cada cálculo tiene dos campos numéricos.
 const CALCULOS: { tipo: TipoCalculo; nombre: string; campos: [Campo, Campo] }[] = [
   {
     tipo: "dosis",
@@ -56,16 +54,16 @@ export default function PantallaCalculadora() {
   const [resultados, setResultados] = useState<Resultado[]>([]);
   const [error, setError] = useState("");
 
-  // Campos del cálculo elegido. El ! indica que siempre se encuentra uno.
+  // Campos del cálculo elegido.
   const campos = CALCULOS.find((c) => c.tipo === calculo)!.campos;
 
-  // Si cambia cualquier dato, el resultado anterior ya no es válido y se borra.
+  // Si cambia un dato, el resultado anterior ya no vale.
   function limpiarResultado() {
     setResultados([]);
     setError("");
   }
 
-  // Al cambiar de cálculo se vacían los campos para no mezclar datos.
+  // Al cambiar de cálculo se vacían los campos.
   function elegirCalculo(tipo: TipoCalculo) {
     setCalculo(tipo);
     setValor1("");

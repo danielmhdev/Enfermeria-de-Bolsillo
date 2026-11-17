@@ -1,6 +1,6 @@
 import { RangoDosis, type TipoDosis } from "./farmaco";
 
-// Crea un rango de prueba; solo importan el tipo y los límites.
+// Rango de prueba: solo importan el tipo y los límites.
 function rango(tipo: TipoDosis, min: number, max: number): RangoDosis {
   return new RangoDosis(
     1, "IV", "Prueba", tipo, min, max, null, null, null, null, null, "Fuente", "https://ejemplo.es"
@@ -8,7 +8,7 @@ function rango(tipo: TipoDosis, min: number, max: number): RangoDosis {
 }
 
 describe("RangoDosis", () => {
-  // Rango por kilo: 1 a 1,5 mg/kg con 80 kg son 80 a 120 mg.
+  // 1 a 1,5 mg/kg con 80 kg son 80 a 120 mg.
   test("los límites de un rango por kilo se calculan con el peso", () => {
     expect(rango("por_kg", 1, 1.5).limitesMg(80)).toEqual({ min: 80, max: 120 });
   });

@@ -9,7 +9,7 @@ import { Farmaco, RangoDosis } from "@/dominio/farmaco";
 import { formatear } from "@/dominio/numeros";
 import { colores } from "@/tema/colores";
 
-// Texto de la dosis de un rango: "400-1.000 mg" o "1-1,5 mg/kg".
+// "400-1.000 mg" o "1-1,5 mg/kg".
 function textoDosis(rango: RangoDosis): string {
   const unidad = rango.tipo === "por_kg" ? "mg/kg" : "mg";
   if (rango.dosisMin === rango.dosisMax) {
@@ -19,7 +19,7 @@ function textoDosis(rango: RangoDosis): string {
 }
 
 export default function PantallaFarmaco() {
-  // El id llega en la ruta: /farmacos/3 da id = "3".
+  // /farmacos/3 da id = "3".
   const { id } = useLocalSearchParams<{ id: string }>();
   const db = useSQLiteContext();
 
@@ -29,7 +29,6 @@ export default function PantallaFarmaco() {
     new FarmacoRepositorio(db).porId(Number(id)).then(setFarmaco);
   }, [db, id]);
 
-  // Mientras se lee de la base de datos no hay nada que pintar.
   if (farmaco === null) {
     return <View style={styles.pantalla} />;
   }
@@ -42,7 +41,7 @@ export default function PantallaFarmaco() {
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
     >
-      {/* Pone el nombre del fármaco en la cabecera de la pantalla. */}
+      {/* Nombre del fármaco en la cabecera. */}
       <Stack.Screen options={{ title: farmaco.nombre }} />
 
       {farmaco.rangos.map((rango) => (

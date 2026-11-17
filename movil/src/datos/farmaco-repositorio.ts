@@ -2,7 +2,7 @@ import { type SQLiteDatabase } from "expo-sqlite";
 import { Farmaco, RangoDosis, type TipoDosis, type Via } from "@/dominio/farmaco";
 import { normalizar } from "@/dominio/texto";
 
-// Forma de las filas tal como salen de SQLite (nombres de columna con guion bajo).
+// Filas tal como salen de SQLite.
 type FilaFarmaco = { id: number; nombre: string };
 
 type FilaRango = {
@@ -21,7 +21,7 @@ type FilaRango = {
   fuente_url: string;
 };
 
-// Acceso de solo lectura a los fármacos guardados en SQLite (R01F02T01).
+// Fármacos guardados en SQLite (R01F02T01).
 export class FarmacoRepositorio {
   private readonly db: SQLiteDatabase;
 
@@ -29,7 +29,7 @@ export class FarmacoRepositorio {
     this.db = db;
   }
 
-  // Busca fármacos cuyo nombre contenga el texto, sin distinguir tildes ni mayúsculas (R03F01T01).
+  // Busca por nombre sin distinguir tildes ni mayúsculas (R03F01T01).
   async buscar(texto: string): Promise<Farmaco[]> {
     const filas = await this.db.getAllAsync<FilaFarmaco>(
       "SELECT id, nombre FROM farmaco WHERE nombre_busqueda LIKE ? ORDER BY nombre",
@@ -44,7 +44,7 @@ export class FarmacoRepositorio {
     return farmacos;
   }
 
-  // Devuelve un fármaco por su id, o null si no existe.
+  // null si no existe.
   async porId(id: number): Promise<Farmaco | null> {
     const fila = await this.db.getFirstAsync<FilaFarmaco>(
       "SELECT id, nombre FROM farmaco WHERE id = ?",
@@ -56,7 +56,6 @@ export class FarmacoRepositorio {
     return new Farmaco(fila.id, fila.nombre, await this.rangosDe(fila.id));
   }
 
-  // Lee los rangos de un fármaco y convierte cada fila en un objeto RangoDosis.
   private async rangosDe(farmacoId: number): Promise<RangoDosis[]> {
     const filas = await this.db.getAllAsync<FilaRango>(
       "SELECT * FROM rango_dosis WHERE farmaco_id = ? ORDER BY id",

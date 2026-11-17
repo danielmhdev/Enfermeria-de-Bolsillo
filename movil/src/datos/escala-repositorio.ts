@@ -1,10 +1,9 @@
 import { type SQLiteDatabase } from "expo-sqlite";
 import { Escala, type DefinicionEscala } from "@/dominio/escala";
 
-// Fila de la tabla escala. La definición llega como texto JSON.
 type FilaEscala = { codigo: string; nombre: string; definicion: string };
 
-// Acceso de solo lectura a las escalas guardadas en SQLite (R01F02T01).
+// Escalas guardadas en SQLite (R01F02T01).
 export class EscalaRepositorio {
   private readonly db: SQLiteDatabase;
 
@@ -12,7 +11,6 @@ export class EscalaRepositorio {
     this.db = db;
   }
 
-  // Devuelve todas las escalas por orden alfabético.
   async todas(): Promise<Escala[]> {
     const filas = await this.db.getAllAsync<FilaEscala>(
       "SELECT codigo, nombre, definicion FROM escala ORDER BY nombre"
@@ -20,7 +18,7 @@ export class EscalaRepositorio {
     return filas.map((fila) => this.crear(fila));
   }
 
-  // Devuelve una escala por su código, o null si no existe.
+  // null si no existe.
   async porCodigo(codigo: string): Promise<Escala | null> {
     const fila = await this.db.getFirstAsync<FilaEscala>(
       "SELECT codigo, nombre, definicion FROM escala WHERE codigo = ?",
@@ -29,7 +27,7 @@ export class EscalaRepositorio {
     return fila === null ? null : this.crear(fila);
   }
 
-  // Convierte una fila en un objeto Escala. JSON.parse pasa el texto a objeto.
+  // La definición se guarda como texto JSON.
   private crear(fila: FilaEscala): Escala {
     return new Escala(
       fila.codigo,

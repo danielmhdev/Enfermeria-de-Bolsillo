@@ -1,7 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { colores } from "@/tema/colores";
 
-// Datos que recibe el componente desde la pantalla que lo usa.
 type Props = {
   etiqueta: string;
   unidad: string;
@@ -9,7 +8,7 @@ type Props = {
   alCambiar: (texto: string) => void;
 };
 
-// Campo para escribir un número, con su etiqueta y su unidad.
+// Campo numérico con su etiqueta y su unidad.
 export function CampoNumero({ etiqueta, unidad, valor, alCambiar }: Props) {
   return (
     <View style={styles.campo}>

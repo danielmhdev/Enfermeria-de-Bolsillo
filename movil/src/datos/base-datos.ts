@@ -9,7 +9,7 @@ export async function iniciarBaseDatos(db: SQLiteDatabase): Promise<void> {
 
   await cargarContenidoInicial(db);
 
-  // Al abrir la app se borran las tareas y las alertas de un turno ya pasado (R06F03T02).
+  // Tareas y alertas de un turno ya pasado (R06F03T02).
   const borradas = await new TareaRepositorio(db).borrarSiCaducadas();
   if (borradas) {
     await cancelarTodasLasAlertas();

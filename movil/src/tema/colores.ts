@@ -1,5 +1,5 @@
 // Paleta de la app (R10F02T01).
-// Cada texto se usa solo sobre el fondo indicado, con contraste WCAG de al menos 4,5:1.
+// Cada texto va sobre su fondo, con contraste de al menos 4,5:1.
 export const colores = {
   // Fondos
   fondo: "#F6F8FB", // fondo de las pantallas

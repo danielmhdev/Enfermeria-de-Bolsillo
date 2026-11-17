@@ -1,12 +1,12 @@
 export type Prioridad = "alta" | "normal";
 
-// Longitud máxima del texto; es la misma que el CHECK de la tabla tarea.
+// La misma que el CHECK de la tabla tarea.
 export const LONGITUD_MAXIMA = 120;
 
-// Horas que dura un turno como máximo. Pasado ese tiempo las tareas se borran.
+// Pasadas 12 horas las tareas se borran.
 export const HORAS_TURNO = 12;
 
-// Tarea del turno. Solo se guarda en el móvil y nunca lleva datos de pacientes.
+// Solo se guarda en el móvil y nunca lleva datos de pacientes.
 export class Tarea {
   constructor(
     public readonly id: number,
@@ -23,7 +23,7 @@ export class Tarea {
   }
 }
 
-// Comprueba el texto de una tarea nueva y lo devuelve sin espacios sobrantes.
+// Devuelve el texto sin espacios sobrantes o lanza un error.
 export function validarTexto(texto: string): string {
   const limpio = texto.trim();
   if (limpio === "") {
@@ -35,7 +35,7 @@ export function validarTexto(texto: string): string {
   return limpio;
 }
 
-// Indica si han pasado 12 horas o más desde la primera tarea del turno (R06F03T02).
+// 12 horas o más desde la primera tarea (R06F03T02).
 export function turnoCaducado(primeraTarea: Date, ahora: Date): boolean {
   const milisegundos = ahora.getTime() - primeraTarea.getTime();
   const horas = milisegundos / (1000 * 60 * 60);

@@ -3,7 +3,7 @@ import * as Notifications from "expo-notifications";
 import { SQLiteProvider } from "expo-sqlite";
 import { iniciarBaseDatos } from "@/datos/base-datos";
 
-// Con la app abierta, la alerta también se muestra y suena.
+// Para que la alerta se vea también con la app abierta.
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowBanner: true,
@@ -13,13 +13,12 @@ Notifications.setNotificationHandler({
   }),
 });
 
-// Una sola pila de pantallas: el menú de inicio y, encima, cada sección.
-// La cabecera da el título y la flecha para volver.
+// Una sola pila: el menú y, encima, cada sección.
 export default function Navegacion() {
   return (
     <SQLiteProvider databaseName="enfermeria.db" onInit={iniciarBaseDatos}>
       <Stack>
-        {/* El menú no lleva cabecera: muestra su propio logo y título. */}
+        {/* El menú no lleva cabecera: tiene su logo. */}
         <Stack.Screen name="index" options={{ title: "Inicio", headerShown: false }} />
         <Stack.Screen name="calculadora/index" options={{ title: "Calculadora" }} />
         <Stack.Screen name="farmacos/index" options={{ title: "Fármacos" }} />
