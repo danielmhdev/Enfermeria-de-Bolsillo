@@ -1,0 +1,564 @@
+[
+  {
+    "codigo": "glasgow",
+    "nombre": "Escala de coma de Glasgow",
+    "definicion": {
+      "fuente": "Teasdale G, Jennett B. Lancet. 1974;2(7872):81-84 (versión revisada de 15 puntos)",
+      "avisoSiItemPuntua": null,
+      "selector": null,
+      "items": [
+        {
+          "id": "ocular",
+          "texto": "Apertura ocular",
+          "opciones": [
+            {
+              "texto": "Espontánea",
+              "puntos": 4,
+              "variante": null
+            },
+            {
+              "texto": "Al hablarle",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "Al dolor",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "Ninguna",
+              "puntos": 1,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "verbal",
+          "texto": "Respuesta verbal",
+          "opciones": [
+            {
+              "texto": "Orientada",
+              "puntos": 5,
+              "variante": null
+            },
+            {
+              "texto": "Confusa",
+              "puntos": 4,
+              "variante": null
+            },
+            {
+              "texto": "Palabras inapropiadas",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "Sonidos incomprensibles",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "Ninguna",
+              "puntos": 1,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "motora",
+          "texto": "Respuesta motora",
+          "opciones": [
+            {
+              "texto": "Obedece órdenes",
+              "puntos": 6,
+              "variante": null
+            },
+            {
+              "texto": "Localiza el dolor",
+              "puntos": 5,
+              "variante": null
+            },
+            {
+              "texto": "Retira al dolor",
+              "puntos": 4,
+              "variante": null
+            },
+            {
+              "texto": "Flexión anormal",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "Extensión anormal",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "Ninguna",
+              "puntos": 1,
+              "variante": null
+            }
+          ]
+        }
+      ],
+      "interpretacion": [
+        {
+          "min": 3,
+          "max": 8,
+          "texto": "Alteración grave del nivel de conciencia"
+        },
+        {
+          "min": 9,
+          "max": 12,
+          "texto": "Alteración moderada del nivel de conciencia"
+        },
+        {
+          "min": 13,
+          "max": 15,
+          "texto": "Alteración leve o nivel de conciencia normal"
+        }
+      ]
+    }
+  },
+  {
+    "codigo": "braden",
+    "nombre": "Escala de Braden",
+    "definicion": {
+      "fuente": "Bergstrom N, Braden BJ, Laguzza A, Holman V. Nurs Res. 1987;36(4):205-210",
+      "avisoSiItemPuntua": null,
+      "selector": null,
+      "items": [
+        {
+          "id": "percepcion",
+          "texto": "Percepción sensorial",
+          "opciones": [
+            {
+              "texto": "Completamente limitada",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "Muy limitada",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "Ligeramente limitada",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "Sin limitaciones",
+              "puntos": 4,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "humedad",
+          "texto": "Exposición a la humedad",
+          "opciones": [
+            {
+              "texto": "Constantemente húmeda",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "A menudo húmeda",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "Ocasionalmente húmeda",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "Raramente húmeda",
+              "puntos": 4,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "actividad",
+          "texto": "Actividad",
+          "opciones": [
+            {
+              "texto": "Encamado",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "En silla",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "Deambula ocasionalmente",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "Deambula frecuentemente",
+              "puntos": 4,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "movilidad",
+          "texto": "Movilidad",
+          "opciones": [
+            {
+              "texto": "Completamente inmóvil",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "Muy limitada",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "Ligeramente limitada",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "Sin limitaciones",
+              "puntos": 4,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "nutricion",
+          "texto": "Nutrición",
+          "opciones": [
+            {
+              "texto": "Muy pobre",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "Probablemente inadecuada",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "Adecuada",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "Excelente",
+              "puntos": 4,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "friccion",
+          "texto": "Roce y peligro de lesiones",
+          "opciones": [
+            {
+              "texto": "Problema",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "Problema potencial",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "No existe problema aparente",
+              "puntos": 3,
+              "variante": null
+            }
+          ]
+        }
+      ],
+      "interpretacion": [
+        {
+          "min": 6,
+          "max": 12,
+          "texto": "Riesgo alto de úlceras por presión"
+        },
+        {
+          "min": 13,
+          "max": 14,
+          "texto": "Riesgo moderado de úlceras por presión"
+        },
+        {
+          "min": 15,
+          "max": 18,
+          "texto": "Riesgo bajo de úlceras por presión"
+        },
+        {
+          "min": 19,
+          "max": 23,
+          "texto": "Sin riesgo"
+        }
+      ]
+    }
+  },
+  {
+    "codigo": "news2",
+    "nombre": "NEWS2",
+    "definicion": {
+      "fuente": "Royal College of Physicians. National Early Warning Score (NEWS) 2. 2017",
+      "avisoSiItemPuntua": 3,
+      "selector": {
+        "id": "escala_spo2",
+        "opciones": [
+          "1",
+          "2"
+        ],
+        "porDefecto": "1"
+      },
+      "items": [
+        {
+          "id": "fr",
+          "texto": "Frecuencia respiratoria (rpm)",
+          "opciones": [
+            {
+              "texto": "8 o menos",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "9-11",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "12-20",
+              "puntos": 0,
+              "variante": null
+            },
+            {
+              "texto": "21-24",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "25 o más",
+              "puntos": 3,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "spo2",
+          "texto": "Saturación de oxígeno",
+          "opciones": [
+            {
+              "texto": "91 % o menos",
+              "puntos": 3,
+              "variante": "1"
+            },
+            {
+              "texto": "92-93 %",
+              "puntos": 2,
+              "variante": "1"
+            },
+            {
+              "texto": "94-95 %",
+              "puntos": 1,
+              "variante": "1"
+            },
+            {
+              "texto": "96 % o más",
+              "puntos": 0,
+              "variante": "1"
+            },
+            {
+              "texto": "83 % o menos",
+              "puntos": 3,
+              "variante": "2"
+            },
+            {
+              "texto": "84-85 %",
+              "puntos": 2,
+              "variante": "2"
+            },
+            {
+              "texto": "86-87 %",
+              "puntos": 1,
+              "variante": "2"
+            },
+            {
+              "texto": "88-92 %, o 93 % o más con aire",
+              "puntos": 0,
+              "variante": "2"
+            },
+            {
+              "texto": "93-94 % con oxígeno",
+              "puntos": 1,
+              "variante": "2"
+            },
+            {
+              "texto": "95-96 % con oxígeno",
+              "puntos": 2,
+              "variante": "2"
+            },
+            {
+              "texto": "97 % o más con oxígeno",
+              "puntos": 3,
+              "variante": "2"
+            }
+          ]
+        },
+        {
+          "id": "oxigeno",
+          "texto": "Aire u oxígeno",
+          "opciones": [
+            {
+              "texto": "Aire",
+              "puntos": 0,
+              "variante": null
+            },
+            {
+              "texto": "Oxígeno",
+              "puntos": 2,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "pas",
+          "texto": "Presión arterial sistólica (mmHg)",
+          "opciones": [
+            {
+              "texto": "90 o menos",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "91-100",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "101-110",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "111-219",
+              "puntos": 0,
+              "variante": null
+            },
+            {
+              "texto": "220 o más",
+              "puntos": 3,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "pulso",
+          "texto": "Pulso (lpm)",
+          "opciones": [
+            {
+              "texto": "40 o menos",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "41-50",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "51-90",
+              "puntos": 0,
+              "variante": null
+            },
+            {
+              "texto": "91-110",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "111-130",
+              "puntos": 2,
+              "variante": null
+            },
+            {
+              "texto": "131 o más",
+              "puntos": 3,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "conciencia",
+          "texto": "Nivel de conciencia",
+          "opciones": [
+            {
+              "texto": "Alerta",
+              "puntos": 0,
+              "variante": null
+            },
+            {
+              "texto": "Confusión nueva, responde a la voz, al dolor o no responde",
+              "puntos": 3,
+              "variante": null
+            }
+          ]
+        },
+        {
+          "id": "temperatura",
+          "texto": "Temperatura (°C)",
+          "opciones": [
+            {
+              "texto": "35,0 o menos",
+              "puntos": 3,
+              "variante": null
+            },
+            {
+              "texto": "35,1-36,0",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "36,1-38,0",
+              "puntos": 0,
+              "variante": null
+            },
+            {
+              "texto": "38,1-39,0",
+              "puntos": 1,
+              "variante": null
+            },
+            {
+              "texto": "39,1 o más",
+              "puntos": 2,
+              "variante": null
+            }
+          ]
+        }
+      ],
+      "interpretacion": [
+        {
+          "min": 0,
+          "max": 4,
+          "texto": "Riesgo bajo"
+        },
+        {
+          "min": 5,
+          "max": 6,
+          "texto": "Riesgo medio: valoración urgente"
+        },
+        {
+          "min": 7,
+          "max": 20,
+          "texto": "Riesgo alto: valoración de emergencia"
+        }
+      ]
+    }
+  }
+]

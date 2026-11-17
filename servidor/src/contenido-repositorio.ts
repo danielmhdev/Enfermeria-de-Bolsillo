@@ -1,8 +1,10 @@
 import { db } from "./base-datos.js";
+import { type Contenido } from "./esquemas.js";
+import { normalizar } from "./texto.js";
 
 // Único acceso del servidor a PostgreSQL.
 export class ContenidoRepositorio {
-  // Versión publicada: el numero más alto, o 0 si aún no se ha publicado nada.
+  // 0 si aún no se ha publicado nada.
   async versionActual(): Promise<number> {
     const resultado = await db.query(
       "SELECT COALESCE(MAX(numero), 0) AS numero FROM version"
@@ -10,7 +12,7 @@ export class ContenidoRepositorio {
     return resultado.rows[0].numero;
   }
 
-  // Todo el contenido, con la misma forma que los ficheros JSON de la app.
+  // Misma forma que los ficheros JSON de la app.
   async contenido() {
     const farmacos = await db.query("SELECT id, nombre FROM farmaco ORDER BY id");
     // AS renombra las columnas al nombre que llevan en el JSON.
@@ -28,7 +30,7 @@ export class ContenidoRepositorio {
 
     return {
       version: await this.versionActual(),
-      // A cada fármaco se le añaden sus rangos, sin la clave ajena.
+      // Cada fármaco con sus rangos, sin la clave ajena.
       farmacos: farmacos.rows.map((farmaco) => ({
         nombre: farmaco.nombre,
         rangos: rangos.rows
@@ -38,5 +40,80 @@ export class ContenidoRepositorio {
       escalas: escalas.rows,
       guias: guias.rows,
     };
+  }
+
+  // Sustituye todo el contenido y sube la versión (R09F03T01).
+  async reemplazar(contenido: Contenido): Promise<number> {
+    // La transacción tiene que ir entera por la misma conexión.
+    const cliente = await db.connect();
+    try {
+      await cliente.query("BEGIN");
+
+      // Los rangos se borran solos (ON DELETE CASCADE).
+      await cliente.query("DELETE FROM farmaco");
+      await cliente.query("DELETE FROM escala");
+      await cliente.query("DELETE FROM guia");
+
+      let farmacoId = 0;
+      let rangoId = 0;
+      for (const farmaco of contenido.farmacos) {
+        farmacoId++;
+        await cliente.query(
+          "INSERT INTO farmaco (id, nombre, nombre_busqueda) VALUES ($1, $2, $3)",
+          [farmacoId, farmaco.nombre, normalizar(farmaco.nombre)]
+        );
+        for (const rango of farmaco.rangos) {
+          rangoId++;
+          // Mismo orden que las columnas de la tabla.
+          await cliente.query(
+            "INSERT INTO rango_dosis VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)",
+            [
+              rangoId,
+              farmacoId,
+              rango.via,
+              rango.indicacion,
+              rango.tipo,
+              rango.dosisMin,
+              rango.dosisMax,
+              rango.intervaloH,
+              rango.maxDiario,
+              rango.pesoMinKg,
+              rango.pesoMaxKg,
+              rango.nota,
+              rango.fuente,
+              rango.fuenteUrl,
+            ]
+          );
+        }
+      }
+
+      for (const escala of contenido.escalas) {
+        await cliente.query("INSERT INTO escala VALUES ($1, $2, $3)", [
+          escala.codigo,
+          escala.nombre,
+          JSON.stringify(escala.definicion),
+        ]);
+      }
+
+      for (const guia of contenido.guias) {
+        await cliente.query("INSERT INTO guia VALUES ($1, $2, $3)", [
+          guia.codigo,
+          guia.nombre,
+          JSON.stringify(guia.arbol),
+        ]);
+      }
+
+      const resultado = await cliente.query(
+        "INSERT INTO version (numero) SELECT COALESCE(MAX(numero), 0) + 1 FROM version RETURNING numero"
+      );
+
+      await cliente.query("COMMIT");
+      return resultado.rows[0].numero;
+    } catch (error) {
+      await cliente.query("ROLLBACK");
+      throw error;
+    } finally {
+      cliente.release();
+    }
   }
 }

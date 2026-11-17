@@ -1,0 +1,248 @@
+[
+  {
+    "nombre": "Paracetamol",
+    "rangos": [
+      {
+        "via": "IV",
+        "indicacion": "Dolor y fiebre, adultos de más de 50 kg",
+        "tipo": "fija",
+        "dosisMin": 1000,
+        "dosisMax": 1000,
+        "intervaloH": 4,
+        "maxDiario": 4000,
+        "pesoMinKg": 50,
+        "pesoMaxKg": null,
+        "nota": "Máximo 3 g al día si hay factores de riesgo de hepatotoxicidad. No más de 4 dosis en 24 horas.",
+        "fuente": "Ficha técnica de Paracetamol B. Braun 10 mg/ml solución para perfusión, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/75594/FT_75594.pdf"
+      },
+      {
+        "via": "IV",
+        "indicacion": "Dolor y fiebre, de más de 33 kg hasta 50 kg",
+        "tipo": "por_kg",
+        "dosisMin": 15,
+        "dosisMax": 15,
+        "intervaloH": 4,
+        "maxDiario": 60,
+        "pesoMinKg": 33,
+        "pesoMaxKg": 50,
+        "nota": "El máximo diario es en mg/kg, sin exceder los 3 g al día. No más de 4 dosis en 24 horas.",
+        "fuente": "Ficha técnica de Paracetamol B. Braun 10 mg/ml solución para perfusión, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/75594/FT_75594.pdf"
+      }
+    ]
+  },
+  {
+    "nombre": "Metamizol (Nolotil)",
+    "rangos": [
+      {
+        "via": "IV",
+        "indicacion": "Dolor agudo y fiebre, a partir de 15 años y más de 53 kg",
+        "tipo": "fija",
+        "dosisMin": 400,
+        "dosisMax": 2480,
+        "intervaloH": 6,
+        "maxDiario": 5000,
+        "pesoMinKg": 53,
+        "pesoMaxKg": null,
+        "nota": "La dosis única habitual es de 400 a 1.000 mg, con un máximo diario de 4.000 mg. Cuando sea necesario puede aumentarse hasta 2.480 mg por dosis y 5.000 mg al día. Precaución con dosis únicas parenterales superiores a 1 g por el riesgo de hipotensión.",
+        "fuente": "Ficha técnica de Nolotil 0,4 g/ml solución inyectable y para perfusión, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/42304/FT_42304.pdf"
+      }
+    ]
+  },
+  {
+    "nombre": "Dexketoprofeno (Enantyum)",
+    "rangos": [
+      {
+        "via": "IV",
+        "indicacion": "Dolor agudo de moderado a intenso, adultos",
+        "tipo": "fija",
+        "dosisMin": 50,
+        "dosisMax": 50,
+        "intervaloH": 8,
+        "maxDiario": 150,
+        "pesoMinKg": null,
+        "pesoMaxKg": null,
+        "nota": "Cada 8-12 horas; si fuera necesario puede repetirse pasadas 6 horas. No más de 2 días de tratamiento.",
+        "fuente": "Ficha técnica de Enantyum 50 mg/2 ml solución inyectable y para perfusión, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/64887/FT_64887.pdf"
+      }
+    ]
+  },
+  {
+    "nombre": "Omeprazol",
+    "rangos": [
+      {
+        "via": "IV",
+        "indicacion": "Alternativa al tratamiento por vía oral, adultos",
+        "tipo": "fija",
+        "dosisMin": 40,
+        "dosisMax": 40,
+        "intervaloH": 24,
+        "maxDiario": null,
+        "pesoMinKg": null,
+        "pesoMaxKg": null,
+        "nota": "En insuficiencia hepática puede ser suficiente una dosis diaria de 10-20 mg.",
+        "fuente": "Ficha técnica de Omeprazol Normon 40 mg polvo para solución para perfusión, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/67270/FT_67270.pdf"
+      }
+    ]
+  },
+  {
+    "nombre": "Enoxaparina (Clexane)",
+    "rangos": [
+      {
+        "via": "SC",
+        "indicacion": "Profilaxis de la enfermedad tromboembólica venosa",
+        "tipo": "fija",
+        "dosisMin": 20,
+        "dosisMax": 40,
+        "intervaloH": 24,
+        "maxDiario": null,
+        "pesoMinKg": null,
+        "pesoMaxKg": null,
+        "nota": "20 mg en pacientes quirúrgicos de riesgo moderado; 40 mg en pacientes quirúrgicos de alto riesgo y en pacientes médicos.",
+        "fuente": "Ficha técnica de Clexane 4.000 UI (40 mg)/0,4 ml solución inyectable en jeringa precargada, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/58503/FT_58503.pdf"
+      },
+      {
+        "via": "SC",
+        "indicacion": "Tratamiento de la TVP y el EP",
+        "tipo": "por_kg",
+        "dosisMin": 1,
+        "dosisMax": 1.5,
+        "intervaloH": 12,
+        "maxDiario": null,
+        "pesoMinKg": null,
+        "pesoMaxKg": null,
+        "nota": "1 mg/kg dos veces al día o 1,5 mg/kg una vez al día.",
+        "fuente": "Ficha técnica de Clexane 4.000 UI (40 mg)/0,4 ml solución inyectable en jeringa precargada, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/58503/FT_58503.pdf"
+      }
+    ]
+  },
+  {
+    "nombre": "Furosemida (Seguril)",
+    "rangos": [
+      {
+        "via": "IV",
+        "indicacion": "Edema asociado a insuficiencia cardiaca congestiva aguda, dosis inicial en adultos",
+        "tipo": "fija",
+        "dosisMin": 20,
+        "dosisMax": 40,
+        "intervaloH": null,
+        "maxDiario": 1500,
+        "pesoMinKg": null,
+        "pesoMaxKg": null,
+        "nota": "La dosis puede ajustarse en función de la respuesta. El máximo diario recomendado en adultos es de 1.500 mg.",
+        "fuente": "Ficha técnica de Seguril 20 mg/2 ml solución inyectable, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/39968/FT_39968.pdf"
+      }
+    ]
+  },
+  {
+    "nombre": "Metoclopramida (Primperan)",
+    "rangos": [
+      {
+        "via": "IV",
+        "indicacion": "Náuseas y vómitos, adultos",
+        "tipo": "fija",
+        "dosisMin": 10,
+        "dosisMax": 10,
+        "intervaloH": 6,
+        "maxDiario": 30,
+        "pesoMinKg": null,
+        "pesoMaxKg": null,
+        "nota": "Hasta tres veces al día. El máximo diario es 30 mg o 0,5 mg/kg. Bolo lento de al menos 3 minutos.",
+        "fuente": "Ficha técnica de Primperan 10 mg/2 ml solución inyectable, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/40256/FT_40256.pdf"
+      }
+    ]
+  },
+  {
+    "nombre": "Ondansetrón",
+    "rangos": [
+      {
+        "via": "IV",
+        "indicacion": "Náuseas y vómitos postoperatorios, adultos",
+        "tipo": "fija",
+        "dosisMin": 4,
+        "dosisMax": 4,
+        "intervaloH": null,
+        "maxDiario": null,
+        "pesoMinKg": null,
+        "pesoMaxKg": null,
+        "nota": "Dosis única, en inyección intravenosa lenta.",
+        "fuente": "Ficha técnica de Ondansetrón Normon 4 mg/2 ml solución inyectable, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/69380/FT_69380.pdf"
+      },
+      {
+        "via": "IV",
+        "indicacion": "Náuseas y vómitos por quimioterapia o radioterapia, adultos",
+        "tipo": "fija",
+        "dosisMin": 8,
+        "dosisMax": 16,
+        "intervaloH": null,
+        "maxDiario": null,
+        "pesoMinKg": null,
+        "pesoMaxKg": null,
+        "nota": "No administrar una dosis única mayor de 16 mg por el riesgo de prolongación del intervalo QT. La dosis de 16 mg va diluida y en perfusión de al menos 15 minutos.",
+        "fuente": "Ficha técnica de Ondansetrón Normon 4 mg/2 ml solución inyectable, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/69380/FT_69380.pdf"
+      }
+    ]
+  },
+  {
+    "nombre": "Amoxicilina/Ácido clavulánico",
+    "rangos": [
+      {
+        "via": "IV",
+        "indicacion": "Tratamiento de infecciones, adultos y niños de 40 kg o más",
+        "tipo": "fija",
+        "dosisMin": 1000,
+        "dosisMax": 1000,
+        "intervaloH": 8,
+        "maxDiario": 3000,
+        "pesoMinKg": 40,
+        "pesoMaxKg": null,
+        "nota": "Dosis expresada en amoxicilina: 1.000 mg/200 mg cada 8 horas.",
+        "fuente": "Ficha técnica de Amoxicilina/Ácido clavulánico Normon 1.000 mg/200 mg polvo para solución inyectable y para perfusión, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/66425/FT_66425.pdf"
+      }
+    ]
+  },
+  {
+    "nombre": "Metilprednisolona (Urbason)",
+    "rangos": [
+      {
+        "via": "IV",
+        "indicacion": "Pauta general en adultos",
+        "tipo": "fija",
+        "dosisMin": 20,
+        "dosisMax": 40,
+        "intervaloH": null,
+        "maxDiario": null,
+        "pesoMinKg": null,
+        "pesoMaxKg": null,
+        "nota": "De 20 a 40 mg al día. En casos graves pueden repetirse las inyecciones hasta 80 mg.",
+        "fuente": "Ficha técnica de Urbason 40 mg polvo y disolvente para solución inyectable, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/34023/FT_34023.pdf"
+      },
+      {
+        "via": "IV",
+        "indicacion": "Situaciones de riesgo vital, adultos",
+        "tipo": "fija",
+        "dosisMin": 250,
+        "dosisMax": 1000,
+        "intervaloH": null,
+        "maxDiario": null,
+        "pesoMinKg": null,
+        "pesoMaxKg": null,
+        "nota": "Dosis única inicial.",
+        "fuente": "Ficha técnica de Urbason 40 mg polvo y disolvente para solución inyectable, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/34023/FT_34023.pdf"
+      }
+    ]
+  }
+]
