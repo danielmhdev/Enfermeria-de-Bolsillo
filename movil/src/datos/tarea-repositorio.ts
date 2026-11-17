@@ -66,6 +66,11 @@ export class TareaRepositorio {
     );
   }
 
+  // R06F01
+  async borrar(id: number): Promise<void> {
+    await this.db.runAsync("DELETE FROM tarea WHERE id = ?", id);
+  }
+
   // Lo usa «Terminar turno» (R06F03T01).
   async borrarTodas(): Promise<void> {
     await this.db.runAsync("DELETE FROM tarea");

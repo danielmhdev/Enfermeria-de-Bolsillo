@@ -46,6 +46,26 @@ export function formatearEspera(minutos: number): string {
   return resto === 0 ? `${horas} h` : `${horas} h ${resto} min`;
 }
 
+// La próxima vez que el reloj marque esa hora: hoy si aún no ha pasado; si no, mañana.
+export function proximaHora(hora: number, minuto: number, ahora: Date): Date {
+  if (
+    !Number.isInteger(hora) ||
+    hora < 0 ||
+    hora > 23 ||
+    !Number.isInteger(minuto) ||
+    minuto < 0 ||
+    minuto > 59
+  ) {
+    throw new Error("Escribe una hora válida, de 00:00 a 23:59.");
+  }
+  const fecha = new Date(ahora);
+  fecha.setHours(hora, minuto, 0, 0);
+  if (fecha <= ahora) {
+    fecha.setDate(fecha.getDate() + 1);
+  }
+  return fecha;
+}
+
 // La tarea pendiente cuya alerta llega antes; null si ninguna tiene alerta pendiente.
 export function proximaAlerta(tareas: Tarea[], ahora: Date): Tarea | null {
   let proxima: Tarea | null = null;

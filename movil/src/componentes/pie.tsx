@@ -20,6 +20,7 @@ export function Pie({ children, menta = false }: Props) {
 }
 
 const styles = StyleSheet.create({
-  pie: { paddingTop: 12, paddingHorizontal: 16, gap: 10, backgroundColor: colores.blanco },
+  // flexShrink: si no cabe (por ejemplo con el teclado abierto), se encoge.
+  pie: { flexShrink: 1, paddingTop: 12, paddingHorizontal: 16, gap: 10, backgroundColor: colores.blanco },
   menta: { backgroundColor: colores.menta, borderTopLeftRadius: 28, borderTopRightRadius: 28 },
 });

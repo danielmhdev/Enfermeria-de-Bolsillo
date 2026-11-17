@@ -1,5 +1,6 @@
 import {
   formatearEspera,
+  proximaHora,
   LONGITUD_MAXIMA,
   proximaAlerta,
   Tarea,
@@ -86,5 +87,21 @@ describe("proximaAlerta", () => {
       tarea(3, false, null),
     ];
     expect(proximaAlerta(tareas, ahora)).toBeNull();
+  });
+});
+
+describe("proximaHora", () => {
+  const ahora = new Date("2026-11-15T23:00:00");
+
+  test("una hora que aún no ha llegado es hoy", () => {
+    expect(proximaHora(23, 30, ahora)).toEqual(new Date("2026-11-15T23:30:00"));
+  });
+
+  test("una hora que ya ha pasado es mañana", () => {
+    expect(proximaHora(7, 0, ahora)).toEqual(new Date("2026-11-16T07:00:00"));
+  });
+
+  test("una hora imposible da error", () => {
+    expect(() => proximaHora(25, 0, ahora)).toThrow();
   });
 });

@@ -50,7 +50,7 @@ export default function Navegacion() {
         <Stack.Screen name="escalas/[codigo]" options={{ title: "", headerShown: false }} />
         <Stack.Screen name="guia/index" options={{ title: "Guía de curas", headerShown: false }} />
         <Stack.Screen name="guia/[codigo]" options={{ title: "", headerShown: false }} />
-        <Stack.Screen name="tareas/index" options={{ title: "Tareas" }} />
+        <Stack.Screen name="tareas/index" options={{ title: "Tareas", headerShown: false }} />
       </Stack>
     </SQLiteProvider>
   );
