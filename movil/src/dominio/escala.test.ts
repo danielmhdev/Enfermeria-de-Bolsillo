@@ -62,3 +62,40 @@ describe("Escala", () => {
     expect(news2.opcionesDe(spo2, "2")).not.toEqual(news2.opcionesDe(spo2, "1"));
   });
 });
+
+describe("rangoPuntos", () => {
+  test("Glasgow va de 3 a 15", () => {
+    expect(escala("glasgow").rangoPuntos()).toEqual({ min: 3, max: 15 });
+  });
+
+  test("Braden va de 6 a 23", () => {
+    expect(escala("braden").rangoPuntos()).toEqual({ min: 6, max: 23 });
+  });
+
+  test("NEWS2 va de 0 a 20", () => {
+    expect(escala("news2").rangoPuntos()).toEqual({ min: 0, max: 20 });
+  });
+});
+
+describe("sinResponder", () => {
+  test("sin respuestas faltan todos los ítems", () => {
+    expect(escala("glasgow").sinResponder({})).toHaveLength(3);
+  });
+
+  test("con dos respuestas de Glasgow falta la tercera", () => {
+    const glasgow = escala("glasgow");
+    const faltan = glasgow.sinResponder(responder(glasgow, [4, 5]));
+    expect(faltan.map((item) => item.id)).toEqual(["motora"]);
+  });
+});
+
+describe("sumaParcial", () => {
+  test("suma solo lo respondido", () => {
+    const glasgow = escala("glasgow");
+    expect(glasgow.sumaParcial(responder(glasgow, [4, 5]))).toBe(9);
+  });
+
+  test("sin respuestas es 0", () => {
+    expect(escala("glasgow").sumaParcial({})).toBe(0);
+  });
+});

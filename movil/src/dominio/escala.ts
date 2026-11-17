@@ -43,6 +43,27 @@ export class Escala {
     return suma;
   }
 
+  // Suma del mínimo y del máximo de cada ítem, con las opciones de todas las variantes.
+  rangoPuntos(): { min: number; max: number } {
+    let min = 0;
+    let max = 0;
+    for (const item of this.definicion.items) {
+      const puntos = item.opciones.map((opcion) => opcion.puntos);
+      min += Math.min(...puntos);
+      max += Math.max(...puntos);
+    }
+    return { min, max };
+  }
+
+  // Suma de lo respondido hasta ahora. No es el total: no se interpreta.
+  sumaParcial(respuestas: Respuestas): number {
+    return Object.values(respuestas).reduce((suma, opcion) => suma + opcion.puntos, 0);
+  }
+
+  sinResponder(respuestas: Respuestas): ItemEscala[] {
+    return this.definicion.items.filter((item) => respuestas[item.id] === undefined);
+  }
+
   // null si el total no está en ningún tramo.
   interpretar(total: number): string | null {
     for (const tramo of this.definicion.interpretacion) {

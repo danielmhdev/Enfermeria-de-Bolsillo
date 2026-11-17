@@ -46,8 +46,8 @@ export default function Navegacion() {
         <Stack.Screen name="calculadora/index" options={{ title: "Calculadora", headerShown: false }} />
         <Stack.Screen name="farmacos/index" options={{ title: "Fármacos", headerShown: false }} />
         <Stack.Screen name="farmacos/[id]" options={{ title: "", headerShown: false }} />
-        <Stack.Screen name="escalas/index" options={{ title: "Escalas" }} />
-        <Stack.Screen name="escalas/[codigo]" options={{ title: "" }} />
+        <Stack.Screen name="escalas/index" options={{ title: "Escalas", headerShown: false }} />
+        <Stack.Screen name="escalas/[codigo]" options={{ title: "", headerShown: false }} />
         <Stack.Screen name="guia/index" options={{ title: "Guía de curas" }} />
         <Stack.Screen name="guia/[codigo]" options={{ title: "" }} />
         <Stack.Screen name="tareas/index" options={{ title: "Tareas" }} />

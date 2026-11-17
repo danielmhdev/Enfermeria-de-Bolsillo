@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import Stack from "expo-router/stack";
 import { useSQLiteContext } from "expo-sqlite";
+import { Boton } from "@/componentes/boton";
+import { Cabecera } from "@/componentes/cabecera";
+import { Mensaje } from "@/componentes/mensaje";
+import { Opcion } from "@/componentes/opcion";
+import { Pie } from "@/componentes/pie";
+import { Tarjeta } from "@/componentes/tarjeta";
+import { Texto } from "@/componentes/texto";
 import { EscalaRepositorio } from "@/datos/escala-repositorio";
-import { Escala, type Opcion, type Respuestas } from "@/dominio/escala";
+import { Escala, type Opcion as OpcionEscala, type Respuestas } from "@/dominio/escala";
 import { colores } from "@/tema/colores";
+import { fuentes } from "@/tema/fuentes";
 
 export default function PantallaEscala() {
   // /escalas/news2 da codigo = "news2".
@@ -25,7 +32,7 @@ export default function PantallaEscala() {
     });
   }, [db, codigo]);
 
-  function responder(itemId: string, opcion: Opcion) {
+  function responder(itemId: string, opcion: OpcionEscala) {
     setRespuestas({ ...respuestas, [itemId]: opcion });
   }
 
@@ -41,132 +48,144 @@ export default function PantallaEscala() {
     setRespuestas(conservadas);
   }
 
+  function reiniciar() {
+    setRespuestas({});
+    setVariante(escala?.definicion.selector?.porDefecto ?? null);
+  }
+
   if (escala === null) {
     return <View style={styles.pantalla} />;
   }
 
-  const { items, selector, fuente } = escala.definicion;
+  const { items, selector, fuente, avisoSiItemPuntua } = escala.definicion;
   const total = escala.total(respuestas);
-  const respondidos = Object.keys(respuestas).length;
+  const faltan = escala.sinResponder(respuestas);
 
   return (
-    <ScrollView
-      style={styles.pantalla}
-      contentContainerStyle={styles.contenedor}
-      contentInsetAdjustmentBehavior="automatic"
-    >
-      <Stack.Screen options={{ title: escala.nombre }} />
+    <View style={styles.pantalla}>
+      <Cabecera
+        titulo={escala.nombre}
+        subtitulo={`Llevas ${items.length - faltan.length} de ${items.length}`}
+        volver="Escalas"
+      />
 
-      {selector !== null && (
-        <View style={styles.bloque}>
-          <Text style={styles.pregunta}>Escala de SpO₂</Text>
-          <View style={styles.selector}>
-            {selector.opciones.map((opcion) => (
-              <Pressable
-                key={opcion}
-                style={[styles.opcion, styles.opcionSelector, variante === opcion && styles.opcionActiva]}
-                onPress={() => cambiarVariante(opcion)}
-              >
-                <Text style={styles.opcionTexto}>Escala {opcion}</Text>
-              </Pressable>
-            ))}
+      {/* Un tramo por ítem: azul respondido, rojo si da el aviso, gris pendiente. */}
+      <View style={styles.progreso}>
+        {items.map((item) => {
+          const respuesta = respuestas[item.id];
+          let color = colores.bordeSuave;
+          if (respuesta !== undefined) {
+            color = respuesta.puntos === avisoSiItemPuntua ? colores.errorBorde : colores.acento;
+          }
+          return <View key={item.id} style={[styles.tramo, { backgroundColor: color }]} />;
+        })}
+      </View>
+
+      <ScrollView contentContainerStyle={styles.contenedor}>
+        {selector !== null && (
+          <Tarjeta>
+            <Texto variante="etiqueta">¿Qué escala de SpO₂?</Texto>
+            <View style={styles.fila}>
+              {selector.opciones.map((opcion) => (
+                <View key={opcion} style={styles.flex}>
+                  <Opcion
+                    texto={`Escala ${opcion}`}
+                    seleccionada={variante === opcion}
+                    alPulsar={() => cambiarVariante(opcion)}
+                  />
+                </View>
+              ))}
+            </View>
+          </Tarjeta>
+        )}
+
+        {items.map((item) => {
+          const respuesta = respuestas[item.id];
+          const enRojo = respuesta !== undefined && respuesta.puntos === avisoSiItemPuntua;
+          return (
+            <Tarjeta key={item.id} style={enRojo && styles.tarjetaRoja}>
+              <View style={styles.fila}>
+                <Texto variante="etiqueta" style={styles.flex}>
+                  {item.texto}
+                </Texto>
+                <View style={styles.insignia}>
+                  <Texto variante="nota" style={enRojo && styles.textoRojo}>
+                    {respuesta === undefined ? "Sin marcar" : `${respuesta.puntos} pt`}
+                  </Texto>
+                </View>
+              </View>
+              {/* Un botón por opción, según la definición (R04F02T01). */}
+              <View style={styles.opciones}>
+                {escala.opcionesDe(item, variante).map((opcion) => (
+                  <Opcion
+                    key={opcion.texto}
+                    texto={opcion.texto}
+                    detalle={`${opcion.puntos} pt`}
+                    seleccionada={respuesta?.texto === opcion.texto}
+                    alPulsar={() => responder(item.id, opcion)}
+                  />
+                ))}
+              </View>
+            </Tarjeta>
+          );
+        })}
+
+        {escala.parametroRojo(respuestas) && (
+          <Mensaje tipo="error">Hay un parámetro con {avisoSiItemPuntua} puntos.</Mensaje>
+        )}
+
+        <Texto variante="nota" style={styles.margen}>
+          {fuente}
+        </Texto>
+      </ScrollView>
+
+      <Pie menta>
+        <View style={styles.fila}>
+          {/* Mientras falte algún ítem se ve la suma parcial, sin interpretar (R04F02T01P02). */}
+          <View style={[styles.circulo, total === null && styles.circuloParcial]}>
+            <Text style={styles.total}>{total ?? escala.sumaParcial(respuestas)}</Text>
+            <Texto variante="nota">{total === null ? "parcial" : "puntos"}</Texto>
           </View>
+          <Texto variante="etiqueta" style={styles.flex}>
+            {total === null ? "" : escala.interpretar(total)}
+          </Texto>
+          <Boton texto="Reiniciar" variante="secundario" alPulsar={reiniciar} />
         </View>
-      )}
-
-      {items.map((item) => (
-        <View key={item.id} style={styles.bloque}>
-          <Text style={styles.pregunta}>{item.texto}</Text>
-          {/* Un botón por opción, según la definición (R04F02T01). */}
-          {escala.opcionesDe(item, variante).map((opcion) => {
-            const elegida = respuestas[item.id]?.texto === opcion.texto;
-            return (
-              <Pressable
-                key={opcion.texto}
-                style={[styles.opcion, elegida && styles.opcionActiva]}
-                accessibilityRole="button"
-                accessibilityState={{ selected: elegida }}
-                onPress={() => responder(item.id, opcion)}
-              >
-                <Text style={[styles.opcionTexto, styles.opcionNombre]}>{opcion.texto}</Text>
-                <Text style={styles.opcionTexto}>{opcion.puntos}</Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      ))}
-
-      {escala.parametroRojo(respuestas) && (
-        <View style={[styles.caja, styles.cajaAviso]}>
-          <Text style={styles.textoAviso}>
-            ⚠ Hay un parámetro con {escala.definicion.avisoSiItemPuntua} puntos.
-          </Text>
-        </View>
-      )}
-
-      {total === null ? (
-        <Text style={styles.pendiente}>
-          Responde todos los ítems para ver el total ({respondidos} de {items.length}).
-        </Text>
-      ) : (
-        <View style={styles.resultado}>
-          <Text style={styles.resultadoValor}>{total} puntos</Text>
-          <Text style={styles.resultadoTexto}>{escala.interpretar(total)}</Text>
-        </View>
-      )}
-
-      <Pressable style={styles.borrar} onPress={() => setRespuestas({})}>
-        <Text style={styles.opcionTexto}>Borrar respuestas</Text>
-      </Pressable>
-
-      <Text style={styles.fuente}>{fuente}</Text>
-    </ScrollView>
+      </Pie>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  pantalla: { flex: 1, backgroundColor: colores.fondo },
-  contenedor: { padding: 16, gap: 16 },
-  bloque: { gap: 8 },
-  pregunta: { color: colores.texto, fontSize: 18, fontWeight: "600" },
-  selector: { flexDirection: "row", gap: 8 },
-  opcion: {
-    minHeight: 48,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
+  pantalla: { flex: 1, backgroundColor: colores.blanco },
+  progreso: { flexDirection: "row", gap: 6, paddingHorizontal: 20, paddingBottom: 8 },
+  tramo: { flex: 1, height: 8, borderRadius: 4 },
+  contenedor: { padding: 16, paddingBottom: 24, gap: 12 },
+  fila: { flexDirection: "row", alignItems: "center", gap: 10 },
+  flex: { flex: 1 },
+  opciones: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  tarjetaRoja: {
+    backgroundColor: colores.errorFondo,
+    borderWidth: 2,
+    borderColor: colores.errorBorde,
+  },
+  insignia: {
     paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colores.borde,
-    backgroundColor: colores.superficie,
+    paddingVertical: 3,
+    borderRadius: 999,
+    backgroundColor: colores.blanco,
   },
-  opcionSelector: { flex: 1, justifyContent: "center" },
-  opcionActiva: { backgroundColor: colores.primario, borderWidth: 2, borderColor: colores.acento },
-  opcionTexto: { color: colores.texto, fontSize: 16 },
-  opcionNombre: { flex: 1 },
-  caja: { padding: 12, borderRadius: 8 },
-  cajaAviso: { backgroundColor: colores.avisoFondo },
-  textoAviso: { color: colores.avisoTexto, fontSize: 16, fontWeight: "600" },
-  pendiente: { color: colores.textoSecundario, fontSize: 16 },
-  resultado: {
-    padding: 12,
-    gap: 4,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colores.borde,
-    backgroundColor: colores.superficie,
-  },
-  resultadoValor: { color: colores.texto, fontSize: 28, fontWeight: "700" },
-  resultadoTexto: { color: colores.texto, fontSize: 16 },
-  borrar: {
-    minHeight: 48,
+  textoRojo: { color: colores.errorTexto },
+  margen: { marginHorizontal: 8 },
+  circulo: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colores.borde,
+    backgroundColor: colores.blanco,
   },
-  fuente: { color: colores.textoSecundario, fontSize: 12 },
+  // Borde discontinuo: la suma todavía no es el total.
+  circuloParcial: { borderWidth: 2, borderStyle: "dashed", borderColor: colores.borde },
+  total: { fontFamily: fuentes.extra, fontSize: 26, lineHeight: 30, color: colores.texto },
 });
