@@ -16,6 +16,9 @@ const EsquemaRango = z
     dosisMax: z.number().positive(),
     intervaloH: positivoONull,
     maxDiario: positivoONull,
+    // Segundo máximo diario en mg/kg, solo en rangos fijos (R03F02T03):
+    // «30 mg o 0,5 mg/kg», vale el menor. Si no aparece en el JSON, es null.
+    maxDiarioPorKg: positivoONull.default(null),
     pesoMinKg: positivoONull,
     pesoMaxKg: positivoONull,
     nota: z.string().nullable(),
@@ -25,6 +28,10 @@ const EsquemaRango = z
   // El mínimo no puede superar al máximo.
   .refine((rango) => rango.dosisMin <= rango.dosisMax, {
     message: "dosisMin no puede ser mayor que dosisMax",
+  })
+  // En un rango por kilo, maxDiario ya está en mg/kg.
+  .refine((rango) => rango.tipo === "fija" || rango.maxDiarioPorKg === null, {
+    message: "maxDiarioPorKg solo se usa en rangos de dosis fija",
   });
 
 export const EsquemaFarmaco = z.object({

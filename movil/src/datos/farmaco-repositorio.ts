@@ -19,6 +19,7 @@ type FilaRango = {
   nota: string | null;
   fuente: string;
   fuente_url: string;
+  max_diario_por_kg: number | null;
 };
 
 // Fármacos guardados en SQLite (R01F02T01).
@@ -66,7 +67,7 @@ export class FarmacoRepositorio {
         new RangoDosis(
           f.id, f.via, f.indicacion, f.tipo, f.dosis_min, f.dosis_max,
           f.intervalo_h, f.max_diario, f.peso_min_kg, f.peso_max_kg,
-          f.nota, f.fuente, f.fuente_url
+          f.nota, f.fuente, f.fuente_url, f.max_diario_por_kg
         )
     );
   }

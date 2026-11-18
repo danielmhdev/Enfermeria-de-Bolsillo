@@ -30,9 +30,9 @@ export class ContenidoRepositorio {
           await this.db.runAsync(
             `INSERT INTO rango_dosis (
               farmaco_id, via, indicacion, tipo, dosis_min, dosis_max,
-              intervalo_h, max_diario, peso_min_kg, peso_max_kg,
+              intervalo_h, max_diario, max_diario_por_kg, peso_min_kg, peso_max_kg,
               nota, fuente, fuente_url
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             farmacoId,
             rango.via,
             rango.indicacion,
@@ -41,6 +41,7 @@ export class ContenidoRepositorio {
             rango.dosisMax,
             rango.intervaloH,
             rango.maxDiario,
+            rango.maxDiarioPorKg,
             rango.pesoMinKg,
             rango.pesoMaxKg,
             rango.nota,

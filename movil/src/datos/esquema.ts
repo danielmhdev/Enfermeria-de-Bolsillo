@@ -53,8 +53,21 @@ CREATE TABLE IF NOT EXISTS ajuste (
 );
 `;
 
+// Columnas añadidas después de crear la tabla (R03F02T03).
+// SQLite no tiene ADD COLUMN IF NOT EXISTS: se mira antes si ya está.
+async function migrar(db: SQLiteDatabase): Promise<void> {
+  const columnas = await db.getAllAsync<{ name: string }>("PRAGMA table_info(rango_dosis)");
+  if (!columnas.some((columna) => columna.name === "max_diario_por_kg")) {
+    await db.execAsync("ALTER TABLE rango_dosis ADD COLUMN max_diario_por_kg REAL;");
+    // El contenido guardado no tiene el dato nuevo: sin versión, se vuelve a
+    // cargar el incluido en la app y después se descarga el del servidor.
+    await db.runAsync("DELETE FROM ajuste WHERE clave = 'version_contenido'");
+  }
+}
+
 export async function crearTablas(db: SQLiteDatabase): Promise<void> {
   // SQLite no comprueba las claves ajenas si no se activa en cada conexión.
   await db.execAsync("PRAGMA foreign_keys = ON;");
   await db.execAsync(ESQUEMA);
+  await migrar(db);
 }

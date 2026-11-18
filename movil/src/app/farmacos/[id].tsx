@@ -40,8 +40,16 @@ function textoPauta(rango: RangoDosis): string | null {
   if (rango.intervaloH !== null) {
     partes.push(`cada ${formatear(rango.intervaloH)} h`);
   }
+  // «máximo 30 mg o 0,5 mg/kg al día (el menor)».
+  const maximos: string[] = [];
   if (rango.maxDiario !== null) {
-    partes.push(`máximo ${formatear(rango.maxDiario)} ${unidad(rango)} al día`);
+    maximos.push(`${formatear(rango.maxDiario)} ${unidad(rango)}`);
+  }
+  if (rango.maxDiarioPorKg !== null) {
+    maximos.push(`${formatear(rango.maxDiarioPorKg)} mg/kg`);
+  }
+  if (maximos.length > 0) {
+    partes.push(`máximo ${maximos.join(" o ")} al día${maximos.length > 1 ? " (el menor)" : ""}`);
   }
   if (partes.length === 0) {
     return null;
@@ -99,8 +107,11 @@ export default function PantallaFarmaco() {
   const pesoValido = !Number.isNaN(pesoKg) && pesoKg > 0;
   // Solo hay aviso de peso si se ha escrito uno y el rango tiene límites.
   const avisar = (r: RangoDosis) => pesoValido && r.tieneLimitesDePeso();
-  // El peso se pide si algún rango es por kilo o tiene límites de peso.
-  const pedirPeso = farmaco.rangos.some((r) => r.tipo === "por_kg" || r.tieneLimitesDePeso());
+  // El peso se pide si algún rango es por kilo, tiene límites de peso
+  // o un máximo diario por kilo.
+  const pedirPeso = farmaco.rangos.some(
+    (r) => r.tipo === "por_kg" || r.tieneLimitesDePeso() || r.maxDiarioPorKg !== null
+  );
 
   return (
     // En iOS sube el contenido por encima del teclado.

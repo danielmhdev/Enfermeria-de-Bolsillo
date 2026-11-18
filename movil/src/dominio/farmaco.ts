@@ -19,7 +19,9 @@ export class RangoDosis {
     public readonly pesoMaxKg: number | null,
     public readonly nota: string | null,
     public readonly fuente: string,
-    public readonly fuenteUrl: string
+    public readonly fuenteUrl: string,
+    // Segundo máximo diario en mg/kg, solo en rangos fijos (R03F02T03).
+    public readonly maxDiarioPorKg: number | null = null
   ) {}
 
   // En los rangos por kilo, los límites dependen del peso.
@@ -39,6 +41,37 @@ export class RangoDosis {
   // Solo avisa por encima del máximo (R03F02T01).
   superaMaximo(dosisMg: number, pesoKg: number | null): boolean {
     return dosisMg > this.limitesMg(pesoKg).max;
+  }
+
+  tieneMaximoDiario(): boolean {
+    return this.maxDiario !== null || this.maxDiarioPorKg !== null;
+  }
+
+  // Máximo en 24 h, en mg, para ese peso; null si no hay máximo diario.
+  // Con dos máximos («30 mg o 0,5 mg/kg») vale el menor. Sin peso,
+  // el de mg/kg no se puede calcular y se usa solo el de mg.
+  maxDiarioMg(pesoKg: number | null): number | null {
+    const maximos: number[] = [];
+    if (this.maxDiario !== null) {
+      if (this.tipo === "fija") {
+        maximos.push(this.maxDiario);
+      } else if (pesoKg === null) {
+        throw new Error("Este rango necesita el peso del paciente.");
+      } else {
+        maximos.push(CalculadoraClinica.dosisPorPeso(pesoKg, this.maxDiario));
+      }
+    }
+    if (this.maxDiarioPorKg !== null && pesoKg !== null) {
+      maximos.push(CalculadoraClinica.dosisPorPeso(pesoKg, this.maxDiarioPorKg));
+    }
+    return maximos.length === 0 ? null : Math.min(...maximos);
+  }
+
+  // Dosis × veces en 24 h por encima del máximo diario (R03F02T03).
+  // Sin máximo diario no hay nada con qué comparar.
+  superaMaximoDiario(dosisMg: number, veces: number, pesoKg: number | null): boolean {
+    const maximo = this.maxDiarioMg(pesoKg);
+    return maximo !== null && dosisMg * veces > maximo;
   }
 
   tieneLimitesDePeso(): boolean {
