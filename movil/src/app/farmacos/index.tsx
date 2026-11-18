@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FlatList, Pressable, StyleSheet, TextInput, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSQLiteContext } from "expo-sqlite";
@@ -7,6 +7,7 @@ import { Cabecera } from "@/componentes/cabecera";
 import { Texto } from "@/componentes/texto";
 import { FarmacoRepositorio } from "@/datos/farmaco-repositorio";
 import { Farmaco, type Via } from "@/dominio/farmaco";
+import { partirCoincidencia } from "@/dominio/texto";
 import { colores } from "@/tema/colores";
 import { fuentes } from "@/tema/fuentes";
 
@@ -20,11 +21,32 @@ const NOMBRES_VIA: Record<Via, string> = {
   IM: "intramuscular",
 };
 
-// "IV · 2 rangos": vías sin repetir y número de rangos.
+// «Intravenosa · 2 rangos según peso»: vías sin repetir, número de rangos
+// y si alguno depende del peso.
 function resumen(farmaco: Farmaco): string {
-  const vias = [...new Set(farmaco.rangos.map((rango) => rango.via))].join(", ");
-  const rangos = farmaco.rangos.length === 1 ? "1 rango" : `${farmaco.rangos.length} rangos`;
-  return `${vias} · ${rangos}`;
+  const vias = [...new Set(farmaco.rangos.map((rango) => rango.via))]
+    .map((via) => NOMBRES_VIA[via])
+    .join(", ");
+  const n = farmaco.rangos.length;
+  const rangos = n === 1 ? "1 rango" : `${n} rangos`;
+  const segunPeso = farmaco.rangos.some((r) => r.tipo === "por_kg" || r.tieneLimitesDePeso());
+  return `${vias.charAt(0).toUpperCase()}${vias.slice(1)} · ${rangos}${segunPeso ? " según peso" : ""}`;
+}
+
+// El nombre con lo buscado resaltado en menta fuerte.
+function Nombre({ nombre, busqueda }: { nombre: string; busqueda: string }) {
+  const trozos = partirCoincidencia(nombre, busqueda);
+  if (trozos === null) {
+    return <Texto variante="seccion">{nombre}</Texto>;
+  }
+  const [antes, coincide, despues] = trozos;
+  return (
+    <Texto variante="seccion">
+      {antes}
+      <Text style={styles.resaltado}>{coincide}</Text>
+      {despues}
+    </Texto>
+  );
 }
 
 export default function PantallaFarmacos() {
@@ -161,7 +183,7 @@ export default function PantallaFarmacos() {
             style={({ pressed }) => [styles.fila, pressed && styles.pulsado]}
           >
             <View style={styles.flex}>
-              <Texto variante="seccion">{item.nombre}</Texto>
+              <Nombre nombre={item.nombre} busqueda={texto} />
               <Texto variante="nota">{resumen(item)}</Texto>
             </View>
             <Ionicons name="chevron-forward" size={22} color={colores.acento} />
@@ -246,6 +268,7 @@ const styles = StyleSheet.create({
     gap: 14,
     backgroundColor: colores.menta,
   },
+  resaltado: { backgroundColor: colores.primario },
   flex: { flex: 1 },
   pulsado: { opacity: 0.85 },
 });
