@@ -20,6 +20,7 @@ export class ContenidoRepositorio {
       SELECT farmaco_id, via, indicacion, tipo,
         dosis_min AS "dosisMin", dosis_max AS "dosisMax",
         intervalo_h AS "intervaloH", max_diario AS "maxDiario",
+        max_diario_por_kg AS "maxDiarioPorKg",
         peso_min_kg AS "pesoMinKg", peso_max_kg AS "pesoMaxKg",
         nota, fuente, fuente_url AS "fuenteUrl"
       FROM rango_dosis ORDER BY id`);
@@ -64,9 +65,11 @@ export class ContenidoRepositorio {
         );
         for (const rango of farmaco.rangos) {
           rangoId++;
-          // Mismo orden que las columnas de la tabla.
+          // Con los nombres de las columnas: no depende de su orden en la tabla.
           await cliente.query(
-            "INSERT INTO rango_dosis VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)",
+            `INSERT INTO rango_dosis (id, farmaco_id, via, indicacion, tipo, dosis_min, dosis_max,
+               intervalo_h, max_diario, max_diario_por_kg, peso_min_kg, peso_max_kg, nota, fuente, fuente_url)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
             [
               rangoId,
               farmacoId,
@@ -77,6 +80,7 @@ export class ContenidoRepositorio {
               rango.dosisMax,
               rango.intervaloH,
               rango.maxDiario,
+              rango.maxDiarioPorKg,
               rango.pesoMinKg,
               rango.pesoMaxKg,
               rango.nota,

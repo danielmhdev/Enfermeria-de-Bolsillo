@@ -152,6 +152,7 @@
         "dosisMax": 10,
         "intervaloH": 6,
         "maxDiario": 30,
+        "maxDiarioPorKg": 0.5,
         "pesoMinKg": null,
         "pesoMaxKg": null,
         "nota": "Hasta tres veces al día. El máximo diario es 30 mg o 0,5 mg/kg. Bolo lento de al menos 3 minutos.",

@@ -40,6 +40,18 @@ test("dosisMin mayor que dosisMax se rechaza", () => {
   assert.equal(resultado.success, false);
 });
 
+test("un rango sin maxDiarioPorKg se acepta y queda en null", () => {
+  const resultado = EsquemaFarmaco.safeParse({ nombre: "Prueba", rangos: [rangoValido] });
+  assert.equal(resultado.success, true);
+  assert.equal(resultado.data?.rangos[0].maxDiarioPorKg, null);
+});
+
+test("maxDiarioPorKg en un rango por kilo se rechaza", () => {
+  const rango = { ...rangoValido, tipo: "por_kg", maxDiarioPorKg: 0.5 };
+  const resultado = EsquemaFarmaco.safeParse({ nombre: "Prueba", rangos: [rango] });
+  assert.equal(resultado.success, false);
+});
+
 // Textos de relleno: no es contenido clínico.
 test("una guía con una respuesta que lleva a un nodo que no existe se rechaza", () => {
   const resultado = EsquemaGuia.safeParse({

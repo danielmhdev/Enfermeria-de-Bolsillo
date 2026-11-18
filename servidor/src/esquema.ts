@@ -44,6 +44,10 @@ CREATE TABLE IF NOT EXISTS version (
   numero INTEGER PRIMARY KEY,
   publicada_en TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Añadida después (R03F02T03). CREATE TABLE IF NOT EXISTS no cambia una tabla
+-- que ya existe, así que se añade aparte: vale para Neon y para una base nueva.
+ALTER TABLE rango_dosis ADD COLUMN IF NOT EXISTS max_diario_por_kg DOUBLE PRECISION;
 `;
 
 export async function crearTablas(): Promise<void> {
