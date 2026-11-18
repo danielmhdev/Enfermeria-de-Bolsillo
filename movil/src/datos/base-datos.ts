@@ -1,7 +1,7 @@
 import { type SQLiteDatabase } from "expo-sqlite";
 import { cancelarTodasLasAlertas } from "./alertas";
 import { cargarContenidoInicial } from "./carga-inicial";
-import { crearTablas } from "./esquema";
+import { crearTablas } from "./tablas";
 import { TareaRepositorio } from "./tarea-repositorio";
 
 export async function iniciarBaseDatos(db: SQLiteDatabase): Promise<void> {

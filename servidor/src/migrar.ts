@@ -1,5 +1,5 @@
 import { db } from "./base-datos.js";
-import { crearTablas } from "./esquema.js";
+import { crearTablas } from "./tablas.js";
 
 // Crea las tablas (R08F01T01).
 await crearTablas();

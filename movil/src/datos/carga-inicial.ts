@@ -4,7 +4,7 @@ import { ContenidoRepositorio } from "./contenido-repositorio";
 import escalasJson from "./contenido/escalas.json";
 import farmacosJson from "./contenido/farmacos.json";
 import guiasJson from "./contenido/guias.json";
-import { type Contenido } from "./esquemas";
+import { type Contenido } from "./validacion";
 
 // Versión del contenido que va dentro de la app.
 const VERSION_INICIAL = 1;

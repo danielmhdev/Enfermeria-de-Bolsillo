@@ -1,7 +1,7 @@
 import { type SQLiteDatabase } from "expo-sqlite";
 import { normalizar } from "@/dominio/texto";
 import { AjusteRepositorio } from "./ajuste-repositorio";
-import { type Contenido } from "./esquemas";
+import { type Contenido } from "./validacion";
 
 export class ContenidoRepositorio {
   private readonly db: SQLiteDatabase;

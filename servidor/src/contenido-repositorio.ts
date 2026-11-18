@@ -1,5 +1,5 @@
 import { db } from "./base-datos.js";
-import { type Contenido } from "./esquemas.js";
+import { type Contenido } from "./validacion.js";
 import { normalizar } from "./texto.js";
 
 // Único acceso del servidor a PostgreSQL.

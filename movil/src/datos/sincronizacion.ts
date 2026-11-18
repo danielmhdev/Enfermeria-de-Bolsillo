@@ -1,7 +1,7 @@
 import { type SQLiteDatabase } from "expo-sqlite";
 import { AjusteRepositorio } from "./ajuste-repositorio";
 import { ContenidoRepositorio } from "./contenido-repositorio";
-import { EsquemaRespuestaContenido } from "./esquemas";
+import { EsquemaRespuestaContenido } from "./validacion";
 
 const URL_API = process.env.EXPO_PUBLIC_API_URL;
 

@@ -1,7 +1,7 @@
 import escalas from "./contenido/escalas.json";
 import farmacos from "./contenido/farmacos.json";
 import guias from "./contenido/guias.json";
-import { EsquemaContenido, EsquemaGuia, EsquemaRespuestaContenido } from "./esquemas";
+import { EsquemaContenido, EsquemaGuia, EsquemaRespuestaContenido } from "./validacion";
 
 test("el contenido que lleva la app es válido", () => {
   const resultado = EsquemaContenido.safeParse({ farmacos, escalas, guias });

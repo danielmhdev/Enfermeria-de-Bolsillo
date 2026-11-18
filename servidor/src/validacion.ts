@@ -1,5 +1,7 @@
-// Copia de servidor/src/esquemas.ts: si cambias uno, cambia el otro.
+// Copia en movil/src/datos/validacion.ts: si cambias uno, cambia el otro.
 import { z } from "zod";
+
+// Esquemas de validación del contenido (R09F01T01).
 
 // No puede estar vacío.
 const texto = z.string().min(1);
@@ -119,8 +121,3 @@ export const EsquemaContenido = z.object({
 
 // Tipo de TypeScript que sale del esquema.
 export type Contenido = z.infer<typeof EsquemaContenido>;
-
-// Lo que devuelve /sync/contenido: el contenido más su versión (R07F02T01).
-export const EsquemaRespuestaContenido = EsquemaContenido.extend({
-  version: z.number().int().positive(),
-});

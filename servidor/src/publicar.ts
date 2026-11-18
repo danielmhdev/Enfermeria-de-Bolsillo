@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { db } from "./base-datos.js";
 import { ContenidoRepositorio } from "./contenido-repositorio.js";
-import { EsquemaContenido } from "./esquemas.js";
+import { EsquemaContenido } from "./validacion.js";
 
 function leer(fichero: string): unknown {
   return JSON.parse(readFileSync(`contenido/${fichero}`, "utf8"));

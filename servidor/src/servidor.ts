@@ -2,7 +2,7 @@ import express from "express";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import { ContenidoRepositorio } from "./contenido-repositorio.js";
-import { crearTablas } from "./esquema.js";
+import { crearTablas } from "./tablas.js";
 
 // Solo rutas GET: el servidor no recibe datos (R11F02T01).
 // Por eso no hay app.post ni express.json().

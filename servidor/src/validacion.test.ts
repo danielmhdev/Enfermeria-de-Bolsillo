@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { test } from "node:test";
-import { EsquemaFarmaco, EsquemaGuia } from "./esquemas.js";
+import { EsquemaFarmaco, EsquemaGuia } from "./validacion.js";
 
 const rangoValido = {
   via: "IV",
