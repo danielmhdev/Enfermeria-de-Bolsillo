@@ -109,11 +109,8 @@ export default function PantallaFarmaco() {
   const pesoValido = !Number.isNaN(pesoKg) && pesoKg > 0;
   // Solo hay aviso de peso si se ha escrito uno y el rango tiene límites.
   const avisar = (r: RangoDosis) => pesoValido && r.tieneLimitesDePeso();
-  // El peso se pide si algún rango es por kilo, tiene límites de peso
-  // o un máximo diario por kilo.
-  const pedirPeso = farmaco.rangos.some(
-    (r) => r.tipo === "por_kg" || r.tieneLimitesDePeso() || r.maxDiarioPorKg !== null
-  );
+  // El peso se pide si algún rango lo necesita.
+  const pedirPeso = farmaco.dependeDelPeso();
 
   return (
     // En iOS sube el contenido por encima del teclado.

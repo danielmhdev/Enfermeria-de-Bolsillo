@@ -131,7 +131,10 @@ export default function PantallaEscala() {
         })}
 
         {escala.parametroRojo(respuestas) && (
-          <Mensaje tipo="error">Hay un parámetro con {avisoSiItemPuntua} puntos.</Mensaje>
+          <Mensaje tipo="error">
+            Un parámetro con {avisoSiItemPuntua} puntos: riesgo bajo-medio, valoración urgente en
+            planta.
+          </Mensaje>
         )}
 
         <Texto variante="nota" style={styles.margen}>

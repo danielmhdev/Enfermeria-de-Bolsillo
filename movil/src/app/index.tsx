@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { AppState, Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { router, useFocusEffect, type Href } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSQLiteContext } from "expo-sqlite";
@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AvisoLegal } from "@/componentes/aviso-legal";
 import { Texto } from "@/componentes/texto";
 import { AjusteRepositorio } from "@/datos/ajuste-repositorio";
+import { limpiarTurnoCaducado } from "@/datos/base-datos";
 import { sincronizar } from "@/datos/sincronizacion";
 import { TareaRepositorio } from "@/datos/tarea-repositorio";
 import { formatearEspera, proximaAlerta, Tarea } from "@/dominio/tarea";
@@ -35,6 +36,18 @@ export default function PantallaInicio() {
       .leer("aviso_aceptado_en")
       .then((valor) => setAceptado(valor !== null));
     sincronizar(db);
+  }, [db]);
+
+  // Al volver a la app desde segundo plano se comprueba otra vez la regla
+  // de 12 h, aunque se esté en el Inicio (R06F03T02).
+  useEffect(() => {
+    const suscripcion = AppState.addEventListener("change", async (estado) => {
+      if (estado === "active") {
+        await limpiarTurnoCaducado(db);
+        setTareas(await new TareaRepositorio(db).todas());
+      }
+    });
+    return () => suscripcion.remove();
   }, [db]);
 
   // El Inicio no se desmonta al abrir una sección: se recarga cada vez que vuelve delante.

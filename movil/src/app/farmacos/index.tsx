@@ -7,7 +7,7 @@ import { Cabecera } from "@/componentes/cabecera";
 import { Texto } from "@/componentes/texto";
 import { FarmacoRepositorio } from "@/datos/farmaco-repositorio";
 import { Farmaco, type Via } from "@/dominio/farmaco";
-import { partirCoincidencia } from "@/dominio/texto";
+import { contar, partirCoincidencia } from "@/dominio/texto";
 import { colores } from "@/tema/colores";
 import { useMargenInferior } from "@/tema/margenes";
 import { fuentes } from "@/tema/fuentes";
@@ -28,9 +28,8 @@ function resumen(farmaco: Farmaco): string {
   const vias = [...new Set(farmaco.rangos.map((rango) => rango.via))]
     .map((via) => NOMBRES_VIA[via])
     .join(", ");
-  const n = farmaco.rangos.length;
-  const rangos = n === 1 ? "1 rango" : `${n} rangos`;
-  const segunPeso = farmaco.rangos.some((r) => r.tipo === "por_kg" || r.tieneLimitesDePeso());
+  const rangos = contar(farmaco.rangos.length, "rango", "rangos");
+  const segunPeso = farmaco.dependeDelPeso();
   return `${vias.charAt(0).toUpperCase()}${vias.slice(1)} · ${rangos}${segunPeso ? " según peso" : ""}`;
 }
 

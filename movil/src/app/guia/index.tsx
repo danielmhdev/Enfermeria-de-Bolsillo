@@ -7,6 +7,7 @@ import { Cabecera } from "@/componentes/cabecera";
 import { Texto } from "@/componentes/texto";
 import { GuiaRepositorio } from "@/datos/guia-repositorio";
 import { Guia } from "@/dominio/guia";
+import { contar } from "@/dominio/texto";
 import { colores } from "@/tema/colores";
 import { useMargenInferior } from "@/tema/margenes";
 
@@ -47,10 +48,10 @@ export default function PantallaGuias() {
               </View>
               <View style={styles.chips}>
                 <View style={styles.chip}>
-                  <Texto variante="nota">{preguntas} preguntas</Texto>
+                  <Texto variante="nota">{contar(preguntas, "pregunta", "preguntas")}</Texto>
                 </View>
                 <View style={styles.chip}>
-                  <Texto variante="nota">{recomendaciones} recomendaciones</Texto>
+                  <Texto variante="nota">{contar(recomendaciones, "recomendación", "recomendaciones")}</Texto>
                 </View>
               </View>
             </Pressable>

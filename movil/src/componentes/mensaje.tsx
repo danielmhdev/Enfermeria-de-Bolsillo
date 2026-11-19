@@ -14,12 +14,11 @@ const ESTILO = {
 
 type Props = {
   tipo: Tipo;
-  titulo?: string;
   children: ReactNode;
 };
 
-// Cada mensaje lleva icono y título además del color.
-export function Mensaje({ tipo, titulo, children }: Props) {
+// Cada mensaje lleva icono además del color.
+export function Mensaje({ tipo, children }: Props) {
   const estilo = ESTILO[tipo];
   return (
     <View
@@ -30,7 +29,6 @@ export function Mensaje({ tipo, titulo, children }: Props) {
         <Ionicons name={estilo.icono} size={22} color={estilo.texto} />
       </View>
       <View style={styles.contenido}>
-        {titulo !== undefined && <Text style={[styles.titulo, { color: estilo.texto }]}>{titulo}</Text>}
         <Text style={[styles.texto, { color: estilo.texto }]}>{children}</Text>
       </View>
     </View>
@@ -48,6 +46,5 @@ const styles = StyleSheet.create({
     backgroundColor: colores.blanco,
   },
   contenido: { flex: 1, gap: 2 },
-  titulo: { fontFamily: fuentes.extra, fontSize: 17, lineHeight: 23 },
   texto: { fontFamily: fuentes.normal, fontSize: 16, lineHeight: 23 },
 });

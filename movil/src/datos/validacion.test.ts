@@ -13,8 +13,30 @@ test("una escala con un ítem sin opciones se rechaza", () => {
     ...escalas[0],
     definicion: { ...escalas[0].definicion, items: [{ id: "a", texto: "Ítem", opciones: [] }] },
   };
-  const resultado = EsquemaContenido.safeParse({ farmacos, escalas: [escala], guias: [] });
+  const resultado = EsquemaContenido.safeParse({ farmacos, escalas: [escala], guias });
   expect(resultado.success).toBe(false);
+});
+
+// R09F03: una lista vacía borraría todo el contenido de la app.
+test("un contenido sin fármacos se rechaza", () => {
+  expect(EsquemaContenido.safeParse({ farmacos: [], escalas, guias }).success).toBe(false);
+});
+
+test("un tramo con min mayor que max se rechaza", () => {
+  const escala = {
+    ...escalas[0],
+    definicion: { ...escalas[0].definicion, interpretacion: [{ min: 10, max: 3, texto: "Tramo" }] },
+  };
+  expect(EsquemaContenido.safeParse({ farmacos, escalas: [escala], guias }).success).toBe(false);
+});
+
+test("una opción por defecto que no está en el selector se rechaza", () => {
+  const news2 = escalas.find((e) => e.codigo === "news2")!;
+  const escala = {
+    ...news2,
+    definicion: { ...news2.definicion, selector: { ...news2.definicion.selector!, porDefecto: "9" } },
+  };
+  expect(EsquemaContenido.safeParse({ farmacos, escalas: [escala], guias }).success).toBe(false);
 });
 
 test("una respuesta sin versión se rechaza", () => {

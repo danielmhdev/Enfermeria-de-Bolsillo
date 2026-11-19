@@ -43,18 +43,8 @@ export default function Navegacion() {
     // Necesario para deslizar las tareas.
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SQLiteProvider databaseName="enfermeria.db" onInit={iniciarBaseDatos}>
-        <Stack>
-          {/* El menú no lleva cabecera: tiene su logo. */}
-          <Stack.Screen name="index" options={{ title: "Inicio", headerShown: false }} />
-          <Stack.Screen name="calculadora/index" options={{ title: "Calculadora", headerShown: false }} />
-          <Stack.Screen name="farmacos/index" options={{ title: "Fármacos", headerShown: false }} />
-          <Stack.Screen name="farmacos/[id]" options={{ title: "", headerShown: false }} />
-          <Stack.Screen name="escalas/index" options={{ title: "Escalas", headerShown: false }} />
-          <Stack.Screen name="escalas/[codigo]" options={{ title: "", headerShown: false }} />
-          <Stack.Screen name="guia/index" options={{ title: "Guía de curas", headerShown: false }} />
-          <Stack.Screen name="guia/[codigo]" options={{ title: "", headerShown: false }} />
-          <Stack.Screen name="tareas/index" options={{ title: "Tareas", headerShown: false }} />
-        </Stack>
+        {/* Cada pantalla dibuja su propia cabecera (Cabecera o el logo del Inicio). */}
+        <Stack screenOptions={{ headerShown: false }} />
       </SQLiteProvider>
     </GestureHandlerRootView>
   );

@@ -101,7 +101,7 @@ export default function PantallaCalculadora() {
     const b = calculo === "ritmo" && valor2.trim() === "" ? 0 : aNumero(valor2);
     const minutos = valor3.trim() === "" ? 0 : aNumero(valor3);
     if (Number.isNaN(a) || Number.isNaN(b) || Number.isNaN(minutos)) {
-      setError("Rellena los campos con números");
+      setError("Rellena los campos con números.");
       return;
     }
 

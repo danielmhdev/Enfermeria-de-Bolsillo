@@ -111,6 +111,28 @@ describe("correspondeAPeso", () => {
   });
 });
 
+describe("límite de peso compartido", () => {
+  // Como el paracetamol: de 33 a 50 kg y más de 50 kg.
+  function conPeso(min: number | null, max: number | null): RangoDosis {
+    return new RangoDosis(
+      1, "IV", "Prueba", "fija", 1, 1, null, null, min, max, null, "Fuente", "https://ejemplo.es"
+    );
+  }
+  const abajo = conPeso(33, 50);
+  const arriba = conPeso(50, null);
+  new Farmaco(1, "Prueba", [arriba, abajo]);
+
+  test("con 50 kg vale el rango de abajo y no el de arriba", () => {
+    expect(abajo.correspondeAPeso(50)).toBe(true);
+    expect(arriba.correspondeAPeso(50)).toBe(false);
+    expect(arriba.correspondeAPeso(51)).toBe(true);
+  });
+
+  test("el rango de arriba se escribe «más de 50 kg»", () => {
+    expect(arriba.textoPeso()).toBe("más de 50 kg");
+  });
+});
+
 describe("tieneVia", () => {
   function rangoPorVia(via: Via): RangoDosis {
     return new RangoDosis(
@@ -124,6 +146,24 @@ describe("tieneVia", () => {
 
   test("un fármaco solo IV no tiene vía SC", () => {
     expect(new Farmaco(1, "Prueba", [rangoPorVia("IV")]).tieneVia("SC")).toBe(false);
+  });
+});
+
+describe("dependeDelPeso", () => {
+  test("un rango por kilo depende del peso", () => {
+    expect(new Farmaco(1, "Prueba", [rango("por_kg", 1, 1.5)]).dependeDelPeso()).toBe(true);
+  });
+
+  // Como la metoclopramida: dosis fija, pero con máximo diario por kilo.
+  test("un rango fijo con máximo diario por kilo depende del peso", () => {
+    const conMaxPorKg = new RangoDosis(
+      1, "IV", "Prueba", "fija", 10, 10, 6, 30, null, null, null, "Fuente", "https://ejemplo.es", 0.5
+    );
+    expect(new Farmaco(1, "Prueba", [conMaxPorKg]).dependeDelPeso()).toBe(true);
+  });
+
+  test("un rango fijo sin límites ni máximo por kilo no depende del peso", () => {
+    expect(new Farmaco(1, "Prueba", [rango("fija", 400, 1000)]).dependeDelPeso()).toBe(false);
   });
 });
 

@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { test } from "node:test";
-import { EsquemaFarmaco, EsquemaGuia } from "./validacion.js";
+import { EsquemaContenido, EsquemaFarmaco, EsquemaGuia } from "./validacion.js";
 
 const rangoValido = {
   via: "IV",
@@ -16,6 +16,12 @@ const rangoValido = {
   fuente: "Fuente de prueba",
   fuenteUrl: "https://example.com/ficha.pdf",
 };
+
+// R09F03: una lista vacía borraría todo el contenido de la app.
+test("un contenido sin fármacos, escalas ni guías se rechaza", () => {
+  const resultado = EsquemaContenido.safeParse({ farmacos: [], escalas: [], guias: [] });
+  assert.equal(resultado.success, false);
+});
 
 test("un fármaco válido se acepta", () => {
   const resultado = EsquemaFarmaco.safeParse({ nombre: "Prueba", rangos: [rangoValido] });

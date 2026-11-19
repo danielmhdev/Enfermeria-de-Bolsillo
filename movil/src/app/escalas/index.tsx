@@ -7,6 +7,7 @@ import { Cabecera } from "@/componentes/cabecera";
 import { Texto } from "@/componentes/texto";
 import { EscalaRepositorio } from "@/datos/escala-repositorio";
 import { Escala } from "@/dominio/escala";
+import { contar } from "@/dominio/texto";
 import { colores } from "@/tema/colores";
 import { useMargenInferior } from "@/tema/margenes";
 
@@ -44,7 +45,7 @@ export default function PantallaEscalas() {
               </View>
               <View style={styles.chips}>
                 <View style={styles.chip}>
-                  <Texto variante="nota">{item.definicion.items.length} ítems</Texto>
+                  <Texto variante="nota">{contar(item.definicion.items.length, "ítem", "ítems")}</Texto>
                 </View>
                 <View style={styles.chip}>
                   <Texto variante="nota">

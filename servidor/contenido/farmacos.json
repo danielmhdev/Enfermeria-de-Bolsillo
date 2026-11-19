@@ -108,15 +108,29 @@
       },
       {
         "via": "SC",
-        "indicacion": "Tratamiento de la TVP y el EP",
+        "indicacion": "Tratamiento de la TVP y el EP, dos veces al día",
         "tipo": "por_kg",
         "dosisMin": 1,
-        "dosisMax": 1.5,
+        "dosisMax": 1,
         "intervaloH": 12,
-        "maxDiario": null,
+        "maxDiario": 2,
         "pesoMinKg": null,
         "pesoMaxKg": null,
-        "nota": "1 mg/kg dos veces al día o 1,5 mg/kg una vez al día.",
+        "nota": "1 mg/kg cada 12 horas.",
+        "fuente": "Ficha técnica de Clexane 4.000 UI (40 mg)/0,4 ml solución inyectable en jeringa precargada, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
+        "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/58503/FT_58503.pdf"
+      },
+      {
+        "via": "SC",
+        "indicacion": "Tratamiento de la TVP y el EP, una vez al día",
+        "tipo": "por_kg",
+        "dosisMin": 1.5,
+        "dosisMax": 1.5,
+        "intervaloH": 24,
+        "maxDiario": 1.5,
+        "pesoMinKg": null,
+        "pesoMaxKg": null,
+        "nota": "1,5 mg/kg una vez al día.",
         "fuente": "Ficha técnica de Clexane 4.000 UI (40 mg)/0,4 ml solución inyectable en jeringa precargada, sección 4.2 (AEMPS, CIMA; consultada el 14/11/2026)",
         "fuenteUrl": "https://cima.aemps.es/cima/pdfs/ft/58503/FT_58503.pdf"
       }

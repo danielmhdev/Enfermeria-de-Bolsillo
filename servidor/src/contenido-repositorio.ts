@@ -92,7 +92,7 @@ export class ContenidoRepositorio {
       }
 
       for (const escala of contenido.escalas) {
-        await cliente.query("INSERT INTO escala VALUES ($1, $2, $3)", [
+        await cliente.query("INSERT INTO escala (codigo, nombre, definicion) VALUES ($1, $2, $3)", [
           escala.codigo,
           escala.nombre,
           JSON.stringify(escala.definicion),
@@ -100,7 +100,7 @@ export class ContenidoRepositorio {
       }
 
       for (const guia of contenido.guias) {
-        await cliente.query("INSERT INTO guia VALUES ($1, $2, $3)", [
+        await cliente.query("INSERT INTO guia (codigo, nombre, arbol) VALUES ($1, $2, $3)", [
           guia.codigo,
           guia.nombre,
           JSON.stringify(guia.arbol),

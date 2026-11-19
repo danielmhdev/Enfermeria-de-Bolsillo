@@ -6,6 +6,11 @@ function sinTildes(texto: string): string {
     .toLowerCase();
 }
 
+// «1 ítem», «3 ítems»: el número con la palabra en singular o en plural.
+export function contar(n: number, singular: string, plural: string): string {
+  return `${n} ${n === 1 ? singular : plural}`;
+}
+
 // Para buscar: además, sin espacios al principio ni al final.
 export function normalizar(texto: string): string {
   return sinTildes(texto).trim();

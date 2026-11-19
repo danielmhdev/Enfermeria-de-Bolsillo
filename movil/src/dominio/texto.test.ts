@@ -1,4 +1,4 @@
-import { normalizar, partirCoincidencia } from "./texto";
+import { contar, normalizar, partirCoincidencia } from "./texto";
 
 describe("normalizar", () => {
   test("quita las tildes y pasa a minúsculas", () => {
@@ -7,6 +7,13 @@ describe("normalizar", () => {
 
   test("quita los espacios del principio y del final", () => {
     expect(normalizar("  Heparina ")).toBe("heparina");
+  });
+});
+
+describe("contar", () => {
+  test("singular con 1 y plural con el resto", () => {
+    expect(contar(1, "ítem", "ítems")).toBe("1 ítem");
+    expect(contar(3, "ítem", "ítems")).toBe("3 ítems");
   });
 });
 

@@ -4,7 +4,7 @@ import { ContenidoRepositorio } from "./contenido-repositorio";
 import escalasJson from "./contenido/escalas.json";
 import farmacosJson from "./contenido/farmacos.json";
 import guiasJson from "./contenido/guias.json";
-import { type Contenido } from "./validacion";
+import { EsquemaContenido } from "./validacion";
 
 // Versión del contenido que va dentro de la app.
 const VERSION_INICIAL = 1;
@@ -14,10 +14,12 @@ export async function cargarContenidoInicial(db: SQLiteDatabase): Promise<void> 
   if ((await new AjusteRepositorio(db).leer("version_contenido")) !== null) {
     return;
   }
-  const contenido: Contenido = {
-    farmacos: farmacosJson as Contenido["farmacos"],
-    escalas: escalasJson as Contenido["escalas"],
-    guias: guiasJson as Contenido["guias"],
-  };
+  // Se valida igual que el contenido que llega del servidor: así los campos
+  // que faltan en el JSON toman su valor por defecto (maxDiarioPorKg = null).
+  const contenido = EsquemaContenido.parse({
+    farmacos: farmacosJson,
+    escalas: escalasJson,
+    guias: guiasJson,
+  });
   await new ContenidoRepositorio(db).reemplazar(contenido, VERSION_INICIAL);
 }

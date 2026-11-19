@@ -50,6 +50,10 @@ export const EsquemaEscala = z.object({
     avisoSiItemPuntua: z.number().nullable(),
     selector: z
       .object({ id: texto, opciones: z.array(texto), porDefecto: texto })
+      // La opción por defecto tiene que ser una de las opciones.
+      .refine((selector) => selector.opciones.includes(selector.porDefecto), {
+        message: "porDefecto no está entre las opciones del selector",
+      })
       .nullable(),
     items: z
       .array(
@@ -69,7 +73,14 @@ export const EsquemaEscala = z.object({
       )
       .min(1),
     interpretacion: z
-      .array(z.object({ min: z.number(), max: z.number(), texto: texto }))
+      .array(
+        z
+          .object({ min: z.number(), max: z.number(), texto: texto })
+          // Cada tramo va de min a max.
+          .refine((tramo) => tramo.min <= tramo.max, {
+            message: "Un tramo tiene min mayor que max",
+          })
+      )
       .min(1),
   }),
 });
@@ -113,10 +124,11 @@ export const EsquemaGuia = z.object({
     ),
 });
 
+// Nunca se acepta una lista vacía: la app borraría todo su contenido (R09F03).
 export const EsquemaContenido = z.object({
-  farmacos: z.array(EsquemaFarmaco),
-  escalas: z.array(EsquemaEscala),
-  guias: z.array(EsquemaGuia),
+  farmacos: z.array(EsquemaFarmaco).min(1),
+  escalas: z.array(EsquemaEscala).min(1),
+  guias: z.array(EsquemaGuia).min(1),
 });
 
 // Tipo de TypeScript que sale del esquema.

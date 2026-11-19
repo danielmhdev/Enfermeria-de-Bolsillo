@@ -12,10 +12,12 @@ import { GuiaRepositorio } from "@/datos/guia-repositorio";
 import { Guia } from "@/dominio/guia";
 import { colores } from "@/tema/colores";
 import { fuentes } from "@/tema/fuentes";
+import { useMargenInferior } from "@/tema/margenes";
 
 export default function PantallaGuia() {
   const { codigo } = useLocalSearchParams<{ codigo: string }>();
   const db = useSQLiteContext();
+  const margenInferior = useMargenInferior();
 
   const [guia, setGuia] = useState<Guia | null>(null);
   // Nodos recorridos, del primero al actual. Sirve para volver atrás.
@@ -37,6 +39,8 @@ export default function PantallaGuia() {
   const numero = camino.filter((id) => guia.nodo(id).tipo === "pregunta").length;
   // La recomendación se parte por párrafos sin cambiar los datos.
   const [principal, ...resto] = nodo.texto.split("\n\n");
+  // La primera pregunta no tiene barra abajo: el final deja el margen inferior.
+  const tienePie = nodo.tipo === "recomendacion" || camino.length > 1;
 
   // Botón de volver (R05F01T01): quita el último paso.
   function volver() {
@@ -45,9 +49,15 @@ export default function PantallaGuia() {
 
   return (
     <View style={styles.pantalla}>
-      <Cabecera titulo="Guía de curas" subtitulo={guia.nombre} volver="Guías" />
+      <Cabecera titulo="Guía de curas" subtitulo={guia.nombre} volver="Guía de curas" />
 
-      <ScrollView style={styles.flex} contentContainerStyle={styles.contenedor}>
+      <ScrollView
+        style={styles.flex}
+        contentContainerStyle={[
+          styles.contenedor,
+          !tienePie && { paddingBottom: margenInferior + 16 },
+        ]}
+      >
         {nodo.tipo === "pregunta" ? (
           <>
             <Tarjeta destacada>

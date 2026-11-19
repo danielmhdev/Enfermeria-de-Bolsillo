@@ -6,7 +6,7 @@ export class CalculadoraClinica {
   // peso (kg) × dosis (mg/kg) = dosis (mg). Ejemplo: 70 kg × 5 mg/kg = 350 mg.
   static dosisPorPeso(pesoKg: number, dosisMgKg: number): number {
     if (pesoKg <= 0 || dosisMgKg <= 0) {
-      throw new Error("El peso y la dosis deben ser mayores que 0");
+      throw new Error("El peso y la dosis deben ser mayores que 0.");
     }
     return pesoKg * dosisMgKg;
   }
@@ -15,7 +15,7 @@ export class CalculadoraClinica {
   static concentracion(cantidadMg: number, volumenMl: number): number {
     // Dividir entre 0 no da error en JavaScript: devuelve Infinity.
     if (cantidadMg <= 0 || volumenMl <= 0) {
-      throw new Error("La cantidad y el volumen deben ser mayores que 0");
+      throw new Error("La cantidad y el volumen deben ser mayores que 0.");
     }
     return cantidadMg / volumenMl;
   }
@@ -23,7 +23,7 @@ export class CalculadoraClinica {
   // volumen (ml) ÷ tiempo (h) = ml/h. Ejemplo: 1.000 ml en 8 h = 125 ml/h.
   static ritmoMlPorHora(volumenMl: number, tiempoH: number): number {
     if (volumenMl <= 0 || tiempoH <= 0) {
-      throw new Error("El volumen y el tiempo deben ser mayores que 0");
+      throw new Error("El volumen y el tiempo deben ser mayores que 0.");
     }
     return volumenMl / tiempoH;
   }
@@ -35,10 +35,10 @@ export class CalculadoraClinica {
     factorGoteo: number,
   ): number {
     if (volumenMl <= 0 || tiempoH <= 0) {
-      throw new Error("El volumen y el tiempo deben ser mayores que 0");
+      throw new Error("El volumen y el tiempo deben ser mayores que 0.");
     }
     if (!CalculadoraClinica.FACTORES_GOTEO.includes(factorGoteo)) {
-      throw new Error("El factor de goteo debe ser 20 o 60");
+      throw new Error("El factor de goteo debe ser 20 o 60.");
     }
     // El tiempo llega en horas y el resultado es por minuto.
     const minutos = tiempoH * 60;

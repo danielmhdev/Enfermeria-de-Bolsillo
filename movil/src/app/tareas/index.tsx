@@ -89,7 +89,7 @@ export default function PantallaTareas() {
   const [minutosAlerta, setMinutosAlerta] = useState(0);
   const [hora, setHora] = useState("");
   const [minuto, setMinuto] = useState("");
-  // El formulario de nueva tarea se despliega desde abajo.
+  // El formulario de abajo, para una tarea nueva o para editar una.
   const [abierto, setAbierto] = useState(false);
   // La tarea que se está editando, o null si el formulario es de una tarea nueva.
   const [editando, setEditando] = useState<Tarea | null>(null);
@@ -390,7 +390,7 @@ export default function PantallaTareas() {
               </Texto>
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Cerrar sin añadir"
+                accessibilityLabel={editando === null ? "Cerrar sin añadir" : "Cerrar sin guardar"}
                 onPress={() => {
                   // Una tarea nueva guarda su borrador; una edición se descarta.
                   if (editando !== null) {
@@ -470,7 +470,7 @@ export default function PantallaTareas() {
                 placeholder="Escribe una tarea…"
                 placeholderTextColor={colores.textoSecundario}
                 maxLength={LONGITUD_MAXIMA}
-                accessibilityLabel="Nueva tarea"
+                accessibilityLabel={editando === null ? "Nueva tarea" : "Texto de la tarea"}
                 returnKeyType="done"
               />
               <Pressable

@@ -24,6 +24,9 @@ export class RangoDosis {
     public readonly maxDiarioPorKg: number | null = null
   ) {}
 
+  // true si otro rango del mismo fármaco termina en pesoMinKg; lo marca Farmaco.
+  pesoMinExcluido = false;
+
   // En los rangos por kilo, los límites dependen del peso.
   limitesMg(pesoKg: number | null): { min: number; max: number } {
     if (this.tipo === "fija") {
@@ -78,13 +81,16 @@ export class RangoDosis {
     return this.pesoMinKg !== null || this.pesoMaxKg !== null;
   }
 
-  // «33 a 50 kg», «53 kg o más» o «hasta 50 kg»; null si no tiene límites.
+  // «33 a 50 kg», «53 kg o más», «más de 50 kg» o «hasta 50 kg»; null si no tiene límites.
   textoPeso(): string | null {
     if (this.pesoMinKg !== null && this.pesoMaxKg !== null) {
-      return `${formatear(this.pesoMinKg)} a ${formatear(this.pesoMaxKg)} kg`;
+      const desde = this.pesoMinExcluido ? "más de " : "";
+      return `${desde}${formatear(this.pesoMinKg)} a ${formatear(this.pesoMaxKg)} kg`;
     }
     if (this.pesoMinKg !== null) {
-      return `${formatear(this.pesoMinKg)} kg o más`;
+      return this.pesoMinExcluido
+        ? `más de ${formatear(this.pesoMinKg)} kg`
+        : `${formatear(this.pesoMinKg)} kg o más`;
     }
     if (this.pesoMaxKg !== null) {
       return `hasta ${formatear(this.pesoMaxKg)} kg`;
@@ -92,10 +98,13 @@ export class RangoDosis {
     return null;
   }
 
-  // Los dos límites se toman incluidos: los datos no dicen si «más de 50 kg» incluye el 50.
+  // El máximo se toma incluido; el mínimo también, salvo que otro rango termine en él.
   // Sin límites, el rango vale para cualquier peso.
   correspondeAPeso(pesoKg: number): boolean {
-    if (this.pesoMinKg !== null && pesoKg < this.pesoMinKg) {
+    if (
+      this.pesoMinKg !== null &&
+      (this.pesoMinExcluido ? pesoKg <= this.pesoMinKg : pesoKg < this.pesoMinKg)
+    ) {
       return false;
     }
     return this.pesoMaxKg === null || pesoKg <= this.pesoMaxKg;
@@ -108,9 +117,24 @@ export class Farmaco {
     public readonly id: number,
     public readonly nombre: string,
     public readonly rangos: RangoDosis[]
-  ) {}
+  ) {
+    // Si un rango empieza en el peso en que termina otro («hasta 50 kg» y «más de 50 kg»),
+    // ese peso es del rango de abajo, como dicen las fichas técnicas.
+    for (const r of rangos) {
+      r.pesoMinExcluido =
+        r.pesoMinKg !== null && rangos.some((otro) => otro.pesoMaxKg === r.pesoMinKg);
+    }
+  }
 
   tieneVia(via: Via): boolean {
     return this.rangos.some((rango) => rango.via === via);
+  }
+
+  // Si algún rango necesita el peso: es por kilo, tiene límites de peso
+  // o un máximo diario por kilo.
+  dependeDelPeso(): boolean {
+    return this.rangos.some(
+      (r) => r.tipo === "por_kg" || r.tieneLimitesDePeso() || r.maxDiarioPorKg !== null
+    );
   }
 }

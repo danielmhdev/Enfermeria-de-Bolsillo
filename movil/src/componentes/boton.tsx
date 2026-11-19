@@ -3,7 +3,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { colores } from "@/tema/colores";
 import { fuentes } from "@/tema/fuentes";
 
-type Variante = "principal" | "secundario" | "peligro";
+type Variante = "principal" | "secundario";
 
 type Props = {
   texto: string;
@@ -15,7 +15,6 @@ type Props = {
 const COLOR_TEXTO = {
   principal: colores.texto,
   secundario: colores.acento,
-  peligro: colores.errorTexto,
 };
 
 // Botón en píldora de 60 de alto.
@@ -45,7 +44,6 @@ const styles = StyleSheet.create({
   },
   principal: { backgroundColor: colores.primario },
   secundario: { backgroundColor: colores.menta },
-  peligro: { backgroundColor: colores.blanco, borderWidth: 2, borderColor: colores.errorTexto },
   pulsado: { opacity: 0.85 },
   texto: { fontFamily: fuentes.extra, fontSize: 18 },
 });
