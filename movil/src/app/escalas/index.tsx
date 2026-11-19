@@ -8,9 +8,11 @@ import { Texto } from "@/componentes/texto";
 import { EscalaRepositorio } from "@/datos/escala-repositorio";
 import { Escala } from "@/dominio/escala";
 import { colores } from "@/tema/colores";
+import { useMargenInferior } from "@/tema/margenes";
 
 export default function PantallaEscalas() {
   const db = useSQLiteContext();
+  const margenInferior = useMargenInferior();
 
   const [escalas, setEscalas] = useState<Escala[]>([]);
 
@@ -23,7 +25,7 @@ export default function PantallaEscalas() {
       <Cabecera titulo="Escalas" subtitulo="¿Qué quieres valorar?" />
 
       <FlatList
-        contentContainerStyle={styles.contenedor}
+        contentContainerStyle={[styles.contenedor, { paddingBottom: margenInferior + 16 }]}
         data={escalas}
         keyExtractor={(escala) => escala.codigo}
         renderItem={({ item }) => {
@@ -60,7 +62,7 @@ export default function PantallaEscalas() {
 
 const styles = StyleSheet.create({
   pantalla: { flex: 1, backgroundColor: colores.blanco },
-  contenedor: { padding: 16, paddingBottom: 40, gap: 10 },
+  contenedor: { padding: 16, gap: 10 },
   tarjeta: { padding: 18, gap: 10, borderRadius: 28, backgroundColor: colores.menta },
   pulsado: { opacity: 0.85 },
   fila: { flexDirection: "row", alignItems: "center", gap: 12 },

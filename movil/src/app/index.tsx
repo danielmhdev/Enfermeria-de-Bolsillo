@@ -11,6 +11,7 @@ import { sincronizar } from "@/datos/sincronizacion";
 import { TareaRepositorio } from "@/datos/tarea-repositorio";
 import { formatearEspera, proximaAlerta, Tarea } from "@/dominio/tarea";
 import { colores } from "@/tema/colores";
+import { useMargenInferior } from "@/tema/margenes";
 
 const SECCIONES: { ruta: Href; nombre: string; icono: keyof typeof Ionicons.glyphMap }[] = [
   { ruta: "/calculadora", nombre: "Calculadora", icono: "calculator-outline" },
@@ -23,6 +24,7 @@ const SECCIONES: { ruta: Href; nombre: string; icono: keyof typeof Ionicons.glyp
 export default function PantallaInicio() {
   const db = useSQLiteContext();
   const margenes = useSafeAreaInsets();
+  const margenInferior = useMargenInferior();
 
   // null mientras se consulta la base de datos.
   const [aceptado, setAceptado] = useState<boolean | null>(null);
@@ -72,7 +74,7 @@ export default function PantallaInicio() {
       style={styles.pantalla}
       contentContainerStyle={[
         styles.contenedor,
-        { paddingTop: margenes.top + 16, paddingBottom: margenes.bottom + 8 },
+        { paddingTop: margenes.top + 16, paddingBottom: margenInferior + 16 },
       ]}
     >
       <View style={styles.cabecera}>

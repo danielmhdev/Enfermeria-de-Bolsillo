@@ -25,7 +25,10 @@ export function AvisoLegal({ alAceptar }: Props) {
   const margenes = useSafeAreaInsets();
   return (
     <View style={styles.pantalla}>
-      <ScrollView contentContainerStyle={[styles.contenedor, { paddingTop: margenes.top + 16 }]}>
+      <ScrollView
+        style={styles.flex}
+        contentContainerStyle={[styles.contenedor, { paddingTop: margenes.top + 16 }]}
+      >
         <View style={styles.cabecera}>
           <Image
             style={styles.logo}
@@ -57,7 +60,8 @@ export function AvisoLegal({ alAceptar }: Props) {
 
 const styles = StyleSheet.create({
   pantalla: { flex: 1, backgroundColor: colores.blanco },
-  contenedor: { paddingHorizontal: 16, paddingBottom: 16, gap: 8 },
+  flex: { flex: 1 },
+  contenedor: { paddingHorizontal: 16, paddingBottom: 24, gap: 8 },
   cabecera: { paddingHorizontal: 8, marginBottom: 8, gap: 12 },
   // Misma proporción que la imagen (892 x 461).
   logo: { height: 48, width: undefined, aspectRatio: 892 / 461, alignSelf: "flex-start" },

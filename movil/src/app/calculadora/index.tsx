@@ -161,6 +161,7 @@ export default function PantallaCalculadora() {
       <Cabecera titulo="Calculadora" />
 
       <ScrollView
+        style={styles.flex}
         contentContainerStyle={styles.contenedor}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
@@ -266,7 +267,8 @@ export default function PantallaCalculadora() {
 
 const styles = StyleSheet.create({
   pantalla: { flex: 1, backgroundColor: colores.blanco },
-  contenedor: { padding: 16, gap: 18 },
+  flex: { flex: 1 },
+  contenedor: { padding: 16, paddingBottom: 24, gap: 18 },
   bloque: { gap: 8 },
   opciones: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   fila: { flexDirection: "row", gap: 10 },

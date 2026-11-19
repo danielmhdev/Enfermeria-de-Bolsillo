@@ -20,6 +20,7 @@ import { FarmacoRepositorio } from "@/datos/farmaco-repositorio";
 import { Farmaco, RangoDosis } from "@/dominio/farmaco";
 import { aNumero, formatear } from "@/dominio/numeros";
 import { colores } from "@/tema/colores";
+import { useMargenInferior } from "@/tema/margenes";
 import { fuentes } from "@/tema/fuentes";
 
 function unidad(rango: RangoDosis): string {
@@ -85,6 +86,7 @@ export default function PantallaFarmaco() {
   // /farmacos/3 da id = "3".
   const { id } = useLocalSearchParams<{ id: string }>();
   const db = useSQLiteContext();
+  const margenInferior = useMargenInferior();
 
   const [farmaco, setFarmaco] = useState<Farmaco | null>(null);
   // Posición del rango elegido para comprobar la dosis.
@@ -122,7 +124,7 @@ export default function PantallaFarmaco() {
       <Cabecera titulo={farmaco.nombre} volver="Fármacos" />
 
       <ScrollView
-        contentContainerStyle={styles.contenedor}
+        contentContainerStyle={[styles.contenedor, { paddingBottom: margenInferior + 16 }]}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
       >
@@ -203,7 +205,7 @@ export default function PantallaFarmaco() {
 
 const styles = StyleSheet.create({
   pantalla: { flex: 1, backgroundColor: colores.blanco },
-  contenedor: { padding: 16, paddingBottom: 40, gap: 12 },
+  contenedor: { padding: 16, gap: 12 },
   bloque: { gap: 2 },
   destacado: { padding: 20, gap: 6, borderRadius: 28, backgroundColor: colores.primario },
   chip: {

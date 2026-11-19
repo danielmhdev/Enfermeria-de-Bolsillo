@@ -9,6 +9,7 @@ import { FarmacoRepositorio } from "@/datos/farmaco-repositorio";
 import { Farmaco, type Via } from "@/dominio/farmaco";
 import { partirCoincidencia } from "@/dominio/texto";
 import { colores } from "@/tema/colores";
+import { useMargenInferior } from "@/tema/margenes";
 import { fuentes } from "@/tema/fuentes";
 
 // Todas las vías, aunque alguna todavía no tenga fármacos.
@@ -51,6 +52,7 @@ function Nombre({ nombre, busqueda }: { nombre: string; busqueda: string }) {
 
 export default function PantallaFarmacos() {
   const db = useSQLiteContext();
+  const margenInferior = useMargenInferior();
 
   const [texto, setTexto] = useState("");
   const [resultados, setResultados] = useState<Farmaco[]>([]);
@@ -77,7 +79,7 @@ export default function PantallaFarmacos() {
       <Cabecera titulo="Fármacos" />
 
       <FlatList
-        contentContainerStyle={styles.contenedor}
+        contentContainerStyle={[styles.contenedor, { paddingBottom: margenInferior + 16 }]}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
         data={visibles}
@@ -196,7 +198,7 @@ export default function PantallaFarmacos() {
 
 const styles = StyleSheet.create({
   pantalla: { flex: 1, backgroundColor: colores.blanco },
-  contenedor: { padding: 16, paddingBottom: 40, gap: 10 },
+  contenedor: { padding: 16, gap: 10 },
   cabeceraLista: { gap: 10, marginBottom: 4 },
   buscador: {
     height: 60,

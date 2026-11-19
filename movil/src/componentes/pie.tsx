@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colores } from "@/tema/colores";
+import { useMargenInferior } from "@/tema/margenes";
 
 type Props = {
   children: ReactNode;
@@ -11,9 +11,9 @@ type Props = {
 // Barra fija de abajo para la acción principal, al alcance del pulgar (R10F01).
 export function Pie({ children, menta = false }: Props) {
   // Espacio de la barra de inicio del iPhone.
-  const margenes = useSafeAreaInsets();
+  const margenInferior = useMargenInferior();
   return (
-    <View style={[styles.pie, menta && styles.menta, { paddingBottom: margenes.bottom + 12 }]}>
+    <View style={[styles.pie, menta && styles.menta, { paddingBottom: margenInferior }]}>
       {children}
     </View>
   );

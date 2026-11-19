@@ -261,7 +261,7 @@ export default function PantallaTareas() {
       />
 
       <FlatList
-        style={styles.lista}
+        style={styles.flex}
         contentContainerStyle={styles.contenedor}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
@@ -360,7 +360,7 @@ export default function PantallaTareas() {
                     <Ionicons name="checkmark" size={18} color={colores.blanco} />
                   )}
                 </View>
-                <View style={styles.flex}>
+                <View style={styles.columna}>
                   <Text style={[styles.tareaTexto, item.completada && styles.tareaHecha]}>
                     {item.texto}
                   </Text>
@@ -502,8 +502,6 @@ export default function PantallaTareas() {
 
 const styles = StyleSheet.create({
   pantalla: { flex: 1, backgroundColor: colores.blanco },
-  // flex: 1 para que la lista no empuje ni encoja la barra de abajo.
-  lista: { flex: 1 },
   contenedor: { padding: 16, paddingBottom: 24, gap: 10 },
   margen: { marginHorizontal: 8 },
   terminar: {
@@ -548,7 +546,8 @@ const styles = StyleSheet.create({
     borderColor: colores.acento,
     backgroundColor: colores.acento,
   },
-  flex: { flex: 1, gap: 2 },
+  flex: { flex: 1 },
+  columna: { flex: 1, gap: 2 },
   tareaTexto: {
     fontFamily: fuentes.extra,
     fontSize: 17,

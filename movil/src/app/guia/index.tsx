@@ -8,9 +8,11 @@ import { Texto } from "@/componentes/texto";
 import { GuiaRepositorio } from "@/datos/guia-repositorio";
 import { Guia } from "@/dominio/guia";
 import { colores } from "@/tema/colores";
+import { useMargenInferior } from "@/tema/margenes";
 
 export default function PantallaGuias() {
   const db = useSQLiteContext();
+  const margenInferior = useMargenInferior();
 
   const [guias, setGuias] = useState<Guia[]>([]);
 
@@ -23,7 +25,7 @@ export default function PantallaGuias() {
       <Cabecera titulo="Guía de curas" />
 
       <FlatList
-        contentContainerStyle={styles.contenedor}
+        contentContainerStyle={[styles.contenedor, { paddingBottom: margenInferior + 16 }]}
         data={guias}
         keyExtractor={(guia) => guia.codigo}
         ListEmptyComponent={<Texto variante="nota">Todavía no hay guías.</Texto>}
@@ -61,7 +63,7 @@ export default function PantallaGuias() {
 
 const styles = StyleSheet.create({
   pantalla: { flex: 1, backgroundColor: colores.blanco },
-  contenedor: { padding: 16, paddingBottom: 40, gap: 10 },
+  contenedor: { padding: 16, gap: 10 },
   tarjeta: { padding: 18, gap: 10, borderRadius: 28, backgroundColor: colores.menta },
   pulsado: { opacity: 0.85 },
   fila: { flexDirection: "row", alignItems: "center", gap: 12 },
