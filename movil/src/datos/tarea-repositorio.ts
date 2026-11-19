@@ -66,6 +66,24 @@ export class TareaRepositorio {
     );
   }
 
+  // Cambia el texto, la prioridad y la alerta de una tarea; completada no se toca.
+  async editar(
+    id: number,
+    texto: string,
+    prioridad: Prioridad,
+    horaAlerta: Date | null,
+    notificacionId: string | null
+  ): Promise<void> {
+    await this.db.runAsync(
+      "UPDATE tarea SET texto = ?, prioridad = ?, hora_alerta = ?, notificacion_id = ? WHERE id = ?",
+      validarTexto(texto),
+      prioridad,
+      horaAlerta === null ? null : horaAlerta.toISOString(),
+      notificacionId,
+      id
+    );
+  }
+
   // R06F01
   async borrar(id: number): Promise<void> {
     await this.db.runAsync("DELETE FROM tarea WHERE id = ?", id);

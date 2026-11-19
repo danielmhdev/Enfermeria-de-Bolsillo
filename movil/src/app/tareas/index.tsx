@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   Alert,
   AppState,
@@ -14,6 +14,8 @@ import {
   View,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
+import Animated, { useAnimatedStyle, type SharedValue } from "react-native-reanimated";
 import { useSQLiteContext } from "expo-sqlite";
 import { Boton } from "@/componentes/boton";
 import { Cabecera } from "@/componentes/cabecera";
@@ -70,6 +72,13 @@ function detalle(tarea: Tarea, ahora: Date): string | null {
   return texto[0].toUpperCase() + texto.slice(1);
 }
 
+// Los botones de Editar y Borrar están detrás de la fila:
+// se ocultan hasta que se empieza a deslizar.
+function Acciones({ progreso, children }: { progreso: SharedValue<number>; children: ReactNode }) {
+  const estilo = useAnimatedStyle(() => ({ opacity: progreso.value > 0 ? 1 : 0 }));
+  return <Animated.View style={[styles.acciones, estilo]}>{children}</Animated.View>;
+}
+
 export default function PantallaTareas() {
   const db = useSQLiteContext();
   const repositorio = new TareaRepositorio(db);
@@ -82,6 +91,8 @@ export default function PantallaTareas() {
   const [minuto, setMinuto] = useState("");
   // El formulario de nueva tarea se despliega desde abajo.
   const [abierto, setAbierto] = useState(false);
+  // La tarea que se está editando, o null si el formulario es de una tarea nueva.
+  const [editando, setEditando] = useState<Tarea | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -104,7 +115,7 @@ export default function PantallaTareas() {
     setTareas(await repositorio.todas());
   }
 
-  async function anadir() {
+  async function guardar() {
     try {
       // Se valida antes de programar la alerta.
       validarTexto(texto);
@@ -125,19 +136,51 @@ export default function PantallaTareas() {
         notificacionId = await programarAlerta(horaAlerta);
       }
 
-      await repositorio.crear(texto, prioridad, horaAlerta, notificacionId);
-      setTexto("");
-      setPrioridad("normal");
-      setMinutosAlerta(0);
-      setHora("");
-      setMinuto("");
-      setError("");
-      setAbierto(false);
-      Keyboard.dismiss();
+      if (editando === null) {
+        await repositorio.crear(texto, prioridad, horaAlerta, notificacionId);
+      } else {
+        // La alerta antigua se cambia por la nueva (o por ninguna).
+        if (editando.notificacionId !== null) {
+          await cancelarAlerta(editando.notificacionId);
+        }
+        await repositorio.editar(editando.id, texto, prioridad, horaAlerta, notificacionId);
+      }
+      limpiarFormulario();
       await recargar();
     } catch (e) {
       setError((e as Error).message);
     }
+  }
+
+  function limpiarFormulario() {
+    setTexto("");
+    setPrioridad("normal");
+    setMinutosAlerta(0);
+    setHora("");
+    setMinuto("");
+    setError("");
+    setEditando(null);
+    setAbierto(false);
+    Keyboard.dismiss();
+  }
+
+  // Abre el formulario de abajo con los datos de la tarea.
+  function editar(tarea: Tarea) {
+    setEditando(tarea);
+    setTexto(tarea.texto);
+    setPrioridad(tarea.prioridad);
+    // Si aún tiene alerta pendiente, se conserva su hora exacta.
+    if (tarea.alertaPendiente(new Date())) {
+      setMinutosAlerta(A_UNA_HORA);
+      setHora(String(tarea.horaAlerta!.getHours()));
+      setMinuto(String(tarea.horaAlerta!.getMinutes()).padStart(2, "0"));
+    } else {
+      setMinutosAlerta(0);
+      setHora("");
+      setMinuto("");
+    }
+    setError("");
+    setAbierto(true);
   }
 
   async function marcar(tarea: Tarea) {
@@ -157,7 +200,7 @@ export default function PantallaTareas() {
     await recargar();
   }
 
-  // Mantener pulsada una tarea la borra (R06F01).
+  // Deslizar una tarea y pulsar «Borrar» la borra (R06F01).
   function borrar(tarea: Tarea) {
     Alert.alert("Borrar tarea", tarea.texto, [
       { text: "Cancelar", style: "cancel" },
@@ -218,6 +261,7 @@ export default function PantallaTareas() {
       />
 
       <FlatList
+        style={styles.lista}
         contentContainerStyle={styles.contenedor}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
@@ -231,7 +275,7 @@ export default function PantallaTareas() {
         ListFooterComponent={
           tareas.length > 0 ? (
             <Texto variante="nota" style={styles.margen}>
-              Mantén pulsada una tarea para borrarla.
+              Desliza una tarea a la izquierda para editarla o borrarla.
             </Texto>
           ) : undefined
         }
@@ -239,39 +283,95 @@ export default function PantallaTareas() {
           const alta = item.prioridad === "alta" && !item.completada;
           const linea = item.completada ? null : detalle(item, ahora);
           return (
-            <Pressable
-              accessibilityRole="checkbox"
-              accessibilityState={{ checked: item.completada }}
-              accessibilityHint="Mantén pulsado para borrarla"
-              onPress={() => marcar(item)}
-              onLongPress={() => borrar(item)}
-              style={({ pressed }) => [
-                styles.fila,
-                !item.completada && styles.filaPendiente,
-                alta && styles.filaAlta,
-                pressed && styles.pulsado,
-              ]}
+            // Deslizar a la izquierda muestra Editar y Borrar. Una tarea hecha solo se puede borrar.
+            <ReanimatedSwipeable
+              // Sin fricción y con poco recorrido: se abre nada más deslizar.
+              friction={1}
+              rightThreshold={20}
+              overshootRight={false}
+              renderRightActions={(progreso, _desplazamiento, metodos) => (
+                <Acciones progreso={progreso}>
+                  {!item.completada && (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="Editar"
+                      onPress={() => {
+                        metodos.close();
+                        editar(item);
+                      }}
+                      style={({ pressed }) => [
+                        styles.accion,
+                        styles.accionEditar,
+                        pressed && styles.pulsado,
+                      ]}
+                    >
+                      <Ionicons name="create-outline" size={24} color={colores.blanco} />
+                    </Pressable>
+                  )}
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="Borrar"
+                    onPress={() => {
+                      metodos.close();
+                      borrar(item);
+                    }}
+                    style={({ pressed }) => [
+                      styles.accion,
+                      styles.accionBorrar,
+                      pressed && styles.pulsado,
+                    ]}
+                  >
+                    <Ionicons name="trash-outline" size={24} color={colores.blanco} />
+                  </Pressable>
+                </Acciones>
+              )}
             >
-              <View
-                style={[
-                  styles.casilla,
-                  alta && styles.casillaAlta,
-                  item.completada && styles.casillaHecha,
+              <Pressable
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: item.completada }}
+                // VoiceOver no puede deslizar: las mismas opciones, con el rotor.
+                accessibilityActions={
+                  item.completada
+                    ? [{ name: "borrar", label: "Borrar" }]
+                    : [
+                        { name: "editar", label: "Editar" },
+                        { name: "borrar", label: "Borrar" },
+                      ]
+                }
+                onAccessibilityAction={(evento) =>
+                  evento.nativeEvent.actionName === "editar" ? editar(item) : borrar(item)
+                }
+                onPress={() => marcar(item)}
+                style={({ pressed }) => [
+                  styles.fila,
+                  !item.completada && styles.filaPendiente,
+                  alta && styles.filaAlta,
+                  pressed && styles.pulsado,
                 ]}
               >
-                {item.completada && <Ionicons name="checkmark" size={18} color={colores.blanco} />}
-              </View>
-              <View style={styles.flex}>
-                <Text style={[styles.tareaTexto, item.completada && styles.tareaHecha]}>
-                  {item.texto}
-                </Text>
-                {linea !== null && (
-                  <Texto variante="nota" style={alta && styles.textoAlta}>
-                    {linea}
-                  </Texto>
-                )}
-              </View>
-            </Pressable>
+                <View
+                  style={[
+                    styles.casilla,
+                    alta && styles.casillaAlta,
+                    item.completada && styles.casillaHecha,
+                  ]}
+                >
+                  {item.completada && (
+                    <Ionicons name="checkmark" size={18} color={colores.blanco} />
+                  )}
+                </View>
+                <View style={styles.flex}>
+                  <Text style={[styles.tareaTexto, item.completada && styles.tareaHecha]}>
+                    {item.texto}
+                  </Text>
+                  {linea !== null && (
+                    <Texto variante="nota" style={alta && styles.textoAlta}>
+                      {linea}
+                    </Texto>
+                  )}
+                </View>
+              </Pressable>
+            </ReanimatedSwipeable>
           );
         }}
       />
@@ -286,12 +386,17 @@ export default function PantallaTareas() {
           >
             <View style={styles.filaTitulo}>
               <Texto variante="etiqueta" style={styles.flex}>
-                Nueva tarea
+                {editando === null ? "Nueva tarea" : "Editar tarea"}
               </Texto>
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel="Cerrar sin añadir"
                 onPress={() => {
+                  // Una tarea nueva guarda su borrador; una edición se descarta.
+                  if (editando !== null) {
+                    limpiarFormulario();
+                    return;
+                  }
                   setAbierto(false);
                   setError("");
                   Keyboard.dismiss();
@@ -370,11 +475,15 @@ export default function PantallaTareas() {
               />
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Añadir tarea"
-                onPress={anadir}
+                accessibilityLabel={editando === null ? "Añadir tarea" : "Guardar cambios"}
+                onPress={guardar}
                 style={({ pressed }) => [styles.anadir, pressed && styles.pulsado]}
               >
-                <Ionicons name="add" size={26} color={colores.texto} />
+                <Ionicons
+                  name={editando === null ? "add" : "checkmark"}
+                  size={26}
+                  color={colores.texto}
+                />
               </Pressable>
             </View>
           </ScrollView>
@@ -393,6 +502,8 @@ export default function PantallaTareas() {
 
 const styles = StyleSheet.create({
   pantalla: { flex: 1, backgroundColor: colores.blanco },
+  // flex: 1 para que la lista no empuje ni encoja la barra de abajo.
+  lista: { flex: 1 },
   contenedor: { padding: 16, paddingBottom: 24, gap: 10 },
   margen: { marginHorizontal: 8 },
   terminar: {
@@ -404,7 +515,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: colores.blanco,
   },
-  terminarTexto: { fontFamily: fuentes.extra, fontSize: 16, color: colores.errorTexto },
+  terminarTexto: {
+    fontFamily: fuentes.extra,
+    fontSize: 16,
+    color: colores.errorTexto,
+  },
   fila: {
     minHeight: 64,
     paddingVertical: 10,
@@ -429,15 +544,28 @@ const styles = StyleSheet.create({
     backgroundColor: colores.blanco,
   },
   casillaAlta: { borderColor: colores.errorTexto },
-  casillaHecha: { borderColor: colores.acento, backgroundColor: colores.acento },
+  casillaHecha: {
+    borderColor: colores.acento,
+    backgroundColor: colores.acento,
+  },
   flex: { flex: 1, gap: 2 },
-  tareaTexto: { fontFamily: fuentes.extra, fontSize: 17, lineHeight: 23, color: colores.texto },
+  tareaTexto: {
+    fontFamily: fuentes.extra,
+    fontSize: 17,
+    lineHeight: 23,
+    color: colores.texto,
+  },
   tareaHecha: {
     fontFamily: fuentes.normal,
     color: colores.textoSecundario,
     textDecorationLine: "line-through",
   },
   textoAlta: { color: colores.errorTexto },
+  acciones: { flexDirection: "row", gap: 8, paddingLeft: 8 },
+  // Solo icono: 56 de ancho, por encima del mínimo de 48.
+  accion: { width: 56, borderRadius: 26, alignItems: "center", justifyContent: "center" },
+  accionEditar: { backgroundColor: colores.acento },
+  accionBorrar: { backgroundColor: colores.errorBorde },
   opciones: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   filaTitulo: { flexDirection: "row", alignItems: "center", gap: 8 },
   cerrar: {
@@ -482,5 +610,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colores.texto,
   },
-  aviso: { color: colores.avisoTexto, fontSize: 13, lineHeight: 18, marginHorizontal: 6 },
+  aviso: {
+    color: colores.avisoTexto,
+    fontSize: 13,
+    lineHeight: 18,
+    marginHorizontal: 6,
+  },
 });
