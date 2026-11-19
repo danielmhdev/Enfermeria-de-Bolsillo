@@ -13,15 +13,15 @@ movil/                 App (Expo SDK 58)
   src/app/             Pantallas: cada fichero es una ruta de expo-router
   src/componentes/     Piezas de interfaz reutilizables
   src/dominio/         Lógica sin dependencias de React ni de SQLite, con sus pruebas
-  src/datos/           SQLite: tablas, repositorios, validación y sincronización
+  src/datos/           SQLite (tablas y repositorios), carga inicial, validación, sincronización y alertas
   src/datos/contenido/ Contenido incluido en la app para el primer arranque
-  src/tema/            Colores y fuentes
+  src/tema/            Colores, fuentes y márgenes
 servidor/              API de contenido
   src/                 Express, PostgreSQL, validación y scripts
   contenido/           JSON que se publican en la base de datos
 ```
 
-La app guarda todo en el móvil y solo usa la red para descargar contenido nuevo: `GET /api/v1/sync/version` y `GET /api/v1/sync/contenido`. Nunca envía datos.
+La app guarda todo en el móvil y solo usa la red para descargar contenido nuevo: `GET /api/v1/sync/version` y `GET /api/v1/sync/contenido`. Nunca envía datos. Las fichas técnicas de CIMA se abren en el navegador.
 
 ## Arrancar el servidor en local
 
@@ -31,8 +31,8 @@ Hace falta Docker.
 cd servidor
 cp .env.example .env
 npm install
-docker compose up -d --build   # PostgreSQL en el puerto 5433 y la API en el 3000
-npm run migrar                 # crea las tablas
+docker compose up -d --build   # PostgreSQL en el 5433 y la API en el 3000
+npm run migrar                 # crea las tablas sin esperar a que arranque la API
 npm run publicar               # valida contenido/*.json y publica una versión nueva
 ```
 
@@ -55,7 +55,7 @@ Para usar el servidor local, en `.env.local` hay que poner la IP del ordenador: 
 
 ```bash
 cd movil && npm test       # Jest
-cd servidor && npm test    # node:test
+cd ../servidor && npm test # node:test
 ```
 
 ## Publicar contenido nuevo
@@ -64,7 +64,7 @@ cd servidor && npm test    # node:test
 2. `npm run publicar` (local) o `npm run publicar:produccion` (Neon, con `servidor/.env.produccion`).
 3. Los móviles descargan la versión nueva la próxima vez que se abre la app.
 
-Si se añade una columna, primero `npm run migrar:produccion`, después se despliega el servidor y por último se publica.
+Si se añade una columna, se añade también en `servidor/src/tablas.ts`: el servidor la crea al desplegarse. Después se publica.
 
 ## Producción
 
