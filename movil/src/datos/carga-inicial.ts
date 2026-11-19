@@ -9,7 +9,7 @@ import { EsquemaContenido } from "./validacion";
 // Versión del contenido que va dentro de la app.
 const VERSION_INICIAL = 1;
 
-// Solo la primera vez que se abre la app (R01F01T02).
+// Solo si no hay versión guardada: la primera vez o tras una migración (R01F01T02).
 export async function cargarContenidoInicial(db: SQLiteDatabase): Promise<void> {
   if ((await new AjusteRepositorio(db).leer("version_contenido")) !== null) {
     return;

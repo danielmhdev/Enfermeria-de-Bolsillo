@@ -1,6 +1,8 @@
 // Copia de servidor/src/validacion.ts: si cambias uno, cambia el otro.
 import { z } from "zod";
 
+// Esquemas de validación del contenido (R09F01T01).
+
 // No puede estar vacío.
 const texto = z.string().min(1);
 

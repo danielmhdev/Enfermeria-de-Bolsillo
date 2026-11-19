@@ -10,7 +10,6 @@ type Props = {
 
 // Barra fija de abajo para la acción principal, al alcance del pulgar (R10F01).
 export function Pie({ children, menta = false }: Props) {
-  // Espacio de la barra de inicio del iPhone.
   const margenInferior = useMargenInferior();
   return (
     <View style={[styles.pie, menta && styles.menta, { paddingBottom: margenInferior }]}>

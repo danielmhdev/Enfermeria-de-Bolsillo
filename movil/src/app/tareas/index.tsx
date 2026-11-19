@@ -40,6 +40,7 @@ import {
   type Prioridad,
 } from "@/dominio/tarea";
 import { aNumero } from "@/dominio/numeros";
+import { contar } from "@/dominio/texto";
 import { colores } from "@/tema/colores";
 import { fuentes } from "@/tema/fuentes";
 
@@ -61,8 +62,8 @@ function detalle(tarea: Tarea, ahora: Date): string | null {
   if (tarea.prioridad === "alta") {
     partes.push("Prioridad alta");
   }
-  if (tarea.alertaPendiente(ahora)) {
-    const minutos = Math.ceil((tarea.horaAlerta!.getTime() - ahora.getTime()) / 60000);
+  const minutos = tarea.minutosHastaAlerta(ahora);
+  if (minutos !== null) {
     partes.push(`te aviso en ${formatearEspera(minutos)}`);
   }
   if (partes.length === 0) {
@@ -246,7 +247,7 @@ export default function PantallaTareas() {
     >
       <Cabecera
         titulo="Tareas"
-        subtitulo={`${pendientes} por hacer · ${hechas} ${hechas === 1 ? "hecha" : "hechas"}`}
+        subtitulo={`${pendientes} por hacer · ${contar(hechas, "hecha", "hechas")}`}
         derecha={
           tareas.length > 0 && (
             <Pressable

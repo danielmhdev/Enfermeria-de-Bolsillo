@@ -12,7 +12,7 @@ type Props = {
   compacta?: boolean;
 };
 
-// La elegida lleva fondo menta, borde azul y ✓: no depende solo del color.
+// La elegida lleva el fondo menta del logo, borde azul y un icono de marca: no depende solo del color.
 export function Opcion({ texto, detalle, seleccionada, alPulsar, compacta = false }: Props) {
   return (
     <Pressable

@@ -2,7 +2,7 @@
 function sinTildes(texto: string): string {
   return texto
     .normalize("NFD") // separa cada letra de su tilde: "á" pasa a "a" + "´"
-    .replace(/[̀-ͯ]/g, "") // borra las tildes sueltas
+    .replace(/[\u0300-\u036f]/g, "") // borra las tildes sueltas
     .toLowerCase();
 }
 
@@ -12,6 +12,7 @@ export function contar(n: number, singular: string, plural: string): string {
 }
 
 // Para buscar: además, sin espacios al principio ni al final.
+// Debe dar lo mismo que la de servidor/src/texto.ts: si cambias una, cambia la otra.
 export function normalizar(texto: string): string {
   return sinTildes(texto).trim();
 }

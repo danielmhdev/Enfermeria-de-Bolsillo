@@ -22,6 +22,15 @@ export class Tarea {
   alertaPendiente(ahora: Date): boolean {
     return this.horaAlerta !== null && this.horaAlerta > ahora;
   }
+
+  // Minutos que faltan para la alerta, redondeando hacia arriba (con 30 s, «1 min»).
+  // null si no tiene alerta o ya ha pasado.
+  minutosHastaAlerta(ahora: Date): number | null {
+    if (this.horaAlerta === null || !this.alertaPendiente(ahora)) {
+      return null;
+    }
+    return Math.ceil((this.horaAlerta.getTime() - ahora.getTime()) / 60000);
+  }
 }
 
 // Devuelve el texto sin espacios sobrantes o lanza un error.

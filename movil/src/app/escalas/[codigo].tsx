@@ -144,7 +144,7 @@ export default function PantallaEscala() {
 
       <Pie menta>
         <View style={styles.fila}>
-          {/* Mientras falte algún ítem se ve la suma parcial, sin interpretar (R04F02T01P02). */}
+          {/* Mientras falte algún ítem se ve la suma parcial, sin interpretar (R04F02T01). */}
           <View style={[styles.circulo, total === null && styles.circuloParcial]}>
             <Text style={styles.total}>{total ?? escala.sumaParcial(respuestas)}</Text>
             <Texto variante="nota">{total === null ? "parcial" : "puntos"}</Texto>

@@ -11,6 +11,7 @@ import { limpiarTurnoCaducado } from "@/datos/base-datos";
 import { sincronizar } from "@/datos/sincronizacion";
 import { TareaRepositorio } from "@/datos/tarea-repositorio";
 import { formatearEspera, proximaAlerta, Tarea } from "@/dominio/tarea";
+import { contar } from "@/dominio/texto";
 import { colores } from "@/tema/colores";
 import { useMargenInferior } from "@/tema/margenes";
 
@@ -73,10 +74,10 @@ export default function PantallaInicio() {
   const pendientes = tareas.filter((tarea) => !tarea.completada).length;
   const ahora = new Date();
   const proxima = proximaAlerta(tareas, ahora);
+  const minutos = proxima?.minutosHastaAlerta(ahora) ?? null;
 
   let resumen = "No tienes tareas pendientes.";
-  if (proxima !== null) {
-    const minutos = Math.ceil((proxima.horaAlerta!.getTime() - ahora.getTime()) / 60000);
+  if (proxima !== null && minutos !== null) {
     resumen = `Próximo aviso en ${formatearEspera(minutos)}: ${proxima.texto}`;
   } else if (pendientes > 0) {
     resumen = "Ninguna tiene aviso.";
@@ -112,7 +113,7 @@ export default function PantallaInicio() {
           <Texto variante="seccion">Tareas</Texto>
           <View style={styles.contador}>
             <Texto variante="etiqueta">
-              {pendientes} {pendientes === 1 ? "pendiente" : "pendientes"}
+              {contar(pendientes, "pendiente", "pendientes")}
             </Texto>
           </View>
         </View>

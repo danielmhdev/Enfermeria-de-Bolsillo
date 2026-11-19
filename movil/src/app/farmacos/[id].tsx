@@ -27,7 +27,7 @@ function unidad(rango: RangoDosis): string {
   return rango.tipo === "por_kg" ? "mg/kg" : "mg";
 }
 
-// "400–1.000 mg" o "1–1,5 mg/kg".
+// "400–1000 mg", "1–1,5 mg/kg" o "10 mg" si el mínimo y el máximo son iguales.
 function textoDosis(rango: RangoDosis): string {
   if (rango.dosisMin === rango.dosisMax) {
     return `${formatear(rango.dosisMin)} ${unidad(rango)}`;
@@ -35,7 +35,7 @@ function textoDosis(rango: RangoDosis): string {
   return `${formatear(rango.dosisMin)}–${formatear(rango.dosisMax)} ${unidad(rango)}`;
 }
 
-// «Cada 4 h · máximo 4.000 mg al día»; null si el rango no tiene ninguno de los dos.
+// «Cada 4 h · máximo 4000 mg al día»; null si el rango no tiene ninguno de los dos.
 function textoPauta(rango: RangoDosis): string | null {
   const partes: string[] = [];
   if (rango.intervaloH !== null) {
@@ -65,7 +65,7 @@ function etiqueta(rango: RangoDosis): string {
   return peso === null ? rango.via : `${rango.via} · ${peso}`;
 }
 
-// «✓ Vale para 45 kg.» o «⚠ No vale para 45 kg.»
+// «Vale para 45 kg.» o «No vale para 45 kg.», cada uno con su icono.
 function AvisoPeso({ rango, pesoKg }: { rango: RangoDosis; pesoKg: number }) {
   const vale = rango.correspondeAPeso(pesoKg);
   return (
@@ -188,7 +188,7 @@ export default function PantallaFarmaco() {
         <Texto variante="nota" style={styles.margen}>
           Fuente: {rango.fuente}
         </Texto>
-        {/* Abre Safari: la app no envía nada (R11F02). Si falla, no hace nada. */}
+        {/* Abre el navegador: la app no envía nada (R11F02). Si falla, no hace nada. */}
         <Boton
           texto="Abrir ficha técnica oficial"
           variante="secundario"

@@ -161,7 +161,7 @@ export default function PantallaFarmacos() {
 
             {filtrando && (
               <Texto variante="nota" style={styles.margen}>
-                {visibles.length === 1 ? "1 resultado" : `${visibles.length} resultados`}
+                {contar(visibles.length, "resultado", "resultados")}
               </Texto>
             )}
           </View>

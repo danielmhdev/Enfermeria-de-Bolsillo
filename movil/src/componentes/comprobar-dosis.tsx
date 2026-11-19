@@ -10,8 +10,9 @@ type Props = {
   rango: RangoDosis;
   // Todos los rangos del fármaco, para saber si alguno vale para el peso.
   rangos: RangoDosis[];
-  // El peso lo guarda la ficha porque también lo usan las tarjetas de rango.
+  // Si el fármaco depende del peso: entonces se muestra el campo Peso.
   pedirPeso: boolean;
+  // El peso lo guarda la ficha porque también lo usan las tarjetas de rango.
   peso: string;
   alCambiarPeso: (texto: string) => void;
 };

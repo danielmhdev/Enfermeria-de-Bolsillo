@@ -40,7 +40,7 @@ test("una opción por defecto que no está en el selector se rechaza", () => {
 });
 
 test("una respuesta sin versión se rechaza", () => {
-  const resultado = EsquemaRespuestaContenido.safeParse({ farmacos, escalas, guias: [] });
+  const resultado = EsquemaRespuestaContenido.safeParse({ farmacos, escalas, guias });
   expect(resultado.success).toBe(false);
 });
 

@@ -54,6 +54,23 @@ describe("alertaPendiente", () => {
   });
 });
 
+describe("minutosHastaAlerta", () => {
+  const ahora = new Date("2026-11-15T10:00:30");
+
+  function tareaConAlerta(hora: Date | null) {
+    return new Tarea(1, "Curar la vía", "normal", false, hora, null, ahora);
+  }
+
+  test("redondea hacia arriba: con 24 min y 30 s faltan 25", () => {
+    expect(tareaConAlerta(new Date("2026-11-15T10:25:00")).minutosHastaAlerta(ahora)).toBe(25);
+  });
+
+  test("sin alerta o con la alerta ya pasada da null", () => {
+    expect(tareaConAlerta(null).minutosHastaAlerta(ahora)).toBeNull();
+    expect(tareaConAlerta(new Date("2026-11-15T09:30:00")).minutosHastaAlerta(ahora)).toBeNull();
+  });
+});
+
 describe("formatearEspera", () => {
   test("menos de una hora", () => {
     expect(formatearEspera(25)).toBe("25 min");

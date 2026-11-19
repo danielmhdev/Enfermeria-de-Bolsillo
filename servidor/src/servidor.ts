@@ -17,7 +17,7 @@ app.set("trust proxy", 3);
 // Cabeceras de seguridad (R11F01T01). También quita x-powered-by.
 app.use(helmet());
 
-// Como mucho 100 peticiones cada 15 minutos por IP (R11F01T01).
+// En las rutas de sincronización, como mucho 100 peticiones cada 15 minutos por IP (R11F01T01).
 // La app hace 1 o 2 cada vez que se abre.
 const limitador = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -34,7 +34,7 @@ app.get("/api/v1/health", (peticion, respuesta) => {
   respuesta.json({ estado: "ok" });
 });
 
-// R08F02T01
+// Rutas de sincronización (R08F02T01).
 app.get("/api/v1/sync/version", async (peticion, respuesta) => {
   respuesta.json({ version: await repositorio.versionActual() });
 });
