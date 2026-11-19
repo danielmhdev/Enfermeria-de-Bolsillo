@@ -81,7 +81,7 @@ export default function PantallaEscala() {
         })}
       </View>
 
-      <ScrollView contentContainerStyle={styles.contenedor}>
+      <ScrollView style={styles.flex} contentContainerStyle={styles.contenedor}>
         {selector !== null && (
           <Tarjeta>
             <Texto variante="etiqueta">¿Qué escala de SpO₂?</Texto>
@@ -146,7 +146,7 @@ export default function PantallaEscala() {
             <Text style={styles.total}>{total ?? escala.sumaParcial(respuestas)}</Text>
             <Texto variante="nota">{total === null ? "parcial" : "puntos"}</Texto>
           </View>
-          <Texto variante="etiqueta" style={styles.flex}>
+          <Texto variante="etiqueta" style={[styles.flex, styles.resultado]}>
             {total === null ? "" : escala.interpretar(total)}
           </Texto>
           <Boton texto="Reiniciar" variante="secundario" alPulsar={reiniciar} />
@@ -163,6 +163,8 @@ const styles = StyleSheet.create({
   contenedor: { padding: 16, paddingBottom: 24, gap: 12 },
   fila: { flexDirection: "row", alignItems: "center", gap: 10 },
   flex: { flex: 1 },
+  // Algo más pequeña para que el resultado quepa en dos líneas.
+  resultado: { fontSize: 14, lineHeight: 19 },
   opciones: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   tarjetaRoja: {
     backgroundColor: colores.errorFondo,

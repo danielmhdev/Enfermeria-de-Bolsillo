@@ -47,7 +47,7 @@ export default function PantallaGuia() {
     <View style={styles.pantalla}>
       <Cabecera titulo="Guía de curas" subtitulo={guia.nombre} volver="Guías" />
 
-      <ScrollView contentContainerStyle={styles.contenedor}>
+      <ScrollView style={styles.flex} contentContainerStyle={styles.contenedor}>
         {nodo.tipo === "pregunta" ? (
           <>
             <Tarjeta destacada>
